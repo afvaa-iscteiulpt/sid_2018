@@ -1,8 +1,38 @@
 /*==============================================================*/
 /* DBMS name:      Sybase SQL Anywhere 12                       */
-/* Created on:     04/03/2018 21:31:17                          */
+/* Created on:     05/03/2018 19:12:19                          */
 /*==============================================================*/
 
+
+drop trigger if exists tr_del_Cultura;
+
+drop trigger if exists tr_ins_Cultura;
+
+drop trigger if exists tr_upd_Cultura;
+
+drop trigger if exists tr_del_Investigador;
+
+drop trigger if exists tr_ins_Investigadior;
+
+drop trigger if exists tr_upd_Investigador;
+
+drop trigger if exists tr_del_Medicoes;
+
+drop trigger if exists tr_ins_Medicoes;
+
+drop trigger if exists tr_upd_Medicoes;
+
+drop trigger if exists tr_del_Variaveis;
+
+drop trigger if exists tr_ins_Variaveis;
+
+drop trigger if exists tr_upd_Variaveis;
+
+drop trigger if exists tr_del_VariaveisMedidas;
+
+drop trigger if exists tr_ins_VariaveisMedidas;
+
+drop trigger if exists tr_upd_VariaveisMedidas;
 
 if exists(select 1 from sys.sysforeignkey where role='FK_CULTURA_INVESTIGA_INVESTIG') then
     alter table Cultura
@@ -169,6 +199,7 @@ create table Cultura
    limiteSuperiorTemperatura decimal(8,2)                   not null,
    limiteInferiorHumidade decimal(8,2)                   not null,
    limiteSuperiorHumidade decimal(8,2)                   not null,
+   deleted              smallint                       null,
    constraint PK_CULTURA primary key (idCultura)
 );
 
@@ -195,7 +226,7 @@ create table HumidadeTemperatura
    horaMedicao          time                           not null,
    valorMedicaoTemperatura decimal(8,2)                   not null,
    valorMedicaoHumidade decimal(8,2)                   not null,
-   idMedicao            bigint                         not null default (S_HumidadeTemperatura.nextval),
+   idMedicao            integer                        not null default (S_HumidadeTemperatura.nextval),
    constraint PK_HUMIDADETEMPERATURA primary key (idMedicao)
 );
 
@@ -214,6 +245,7 @@ create table Investigador
    idInvestigador       integer                        not null default (S_Investigador.nextval),
    email                varchar(50)                    not null,
    nomeInvestigador     varchar(100)                   not null,
+   deleted              smallint                       null,
    constraint PK_INVESTIGADOR primary key (idInvestigador)
 );
 
@@ -236,10 +268,10 @@ create table LogCultura
    limiteSuperiorTemperatura decimal(8,2)                   not null,
    limiteInferiorHumidade decimal(8,2)                   not null,
    limiteSuperiorHumidade decimal(8,2)                   not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogCultura         bigint                         not null default (S_LogCultura.nextval),
+   idLogCultura         integer                        not null default (S_LogCultura.nextval),
    constraint PK_LOGCULTURA primary key (idLogCultura)
 );
 
@@ -258,10 +290,10 @@ create table LogInvestigador
    idInvestigador       integer                        not null,
    email                varchar(50)                    not null,
    nomeInvestigador     varchar(100)                   not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogInvestigador    bigint                         not null default (S_LogInvestigador.nextval),
+   idLogInvestigador    integer                        not null default (S_LogInvestigador.nextval),
    constraint PK_LOGINVESTIGADOR primary key (idLogInvestigador)
 );
 
@@ -279,13 +311,13 @@ create table LogMedicoes
 (
    idCultura            integer                        not null,
    idVariavel           integer                        not null,
-   numeroMedicao        bigint                         not null,
+   numeroMedicao        integer                        not null,
    dataMedicao          date                           not null,
    horaMedicao          time                           not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogMedicoes        bigint                         not null default (S_LogMedicoes.nextval),
+   idLogMedicoes        integer                        not null default (S_LogMedicoes.nextval),
    constraint PK_LOGMEDICOES primary key (idLogMedicoes)
 );
 
@@ -301,9 +333,9 @@ idLogMedicoes ASC
 /*==============================================================*/
 create table LogSelect 
 (
-   idLogSelect          bigint                         not null default (S_LogSelect.nextval),
+   idLogSelect          integer                        not null default (S_LogSelect.nextval),
    comandoSelect        varchar(1024)                  not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
    constraint PK_LOGSELECT primary key (idLogSelect)
@@ -323,10 +355,10 @@ create table LogVariaveis
 (
    idVariavel           integer                        not null,
    nomeVariavel         varchar(100)                   not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogVariaveis       bigint                         not null default (S_LogVariaveis.nextval),
+   idLogVariaveis       integer                        not null default (S_LogVariaveis.nextval),
    constraint PK_LOGVARIAVEIS primary key (idLogVariaveis)
 );
 
@@ -346,10 +378,10 @@ create table LogVariaveisMedidas
    idVariavel           integer                        not null,
    limiteInferior       decimal(8,2)                   not null,
    limiteSuperior       decimal(8,2)                   not null,
-   utilizador           integer                        not null,
+   utilizador           varchar(50)                    not null,
    operacao             char(1)                        null,
    dataOperacao         timestamp                      null,
-   idLogVariaveisMedidas bigint                         not null default (S_LogVariaveisMedidas.nextval),
+   idLogVariaveisMedidas integer                        not null default (S_LogVariaveisMedidas.nextval),
    constraint PK_LOGVARIAVEISMEDIDAS primary key (idLogVariaveisMedidas)
 );
 
@@ -367,9 +399,10 @@ create table Medicoes
 (
    idCultura            integer                        not null,
    idVariavel           integer                        not null,
-   numeroMedicao        bigint                         not null default (S_Medicoes.nextval),
+   numeroMedicao        integer                        not null default (S_Medicoes.nextval),
    dataMedicao          date                           not null,
    horaMedicao          time                           not null,
+   deleted              smallint                       null,
    constraint PK_MEDICOES primary key (idCultura, idVariavel, numeroMedicao)
 );
 
@@ -397,6 +430,7 @@ create table Variaveis
 (
    idVariavel           integer                        not null default (S_Variaveis.nextval),
    nomeVariavel         varchar(100)                   not null,
+   deleted              smallint                       null,
    constraint PK_VARIAVEIS primary key (idVariavel)
 );
 
@@ -416,6 +450,7 @@ create table VariaveisMedidas
    idVariavel           integer                        not null,
    limiteInferior       decimal(8,2)                   not null,
    limiteSuperior       decimal(8,2)                   not null,
+   deleted              smallint                       null,
    constraint PK_VARIAVEISMEDIDAS primary key (idCultura, idVariavel)
 );
 
@@ -464,4 +499,356 @@ alter table VariaveisMedidas
       references Variaveis (idVariavel)
       on update restrict
       on delete restrict;
+
+
+create trigger tr_del_Cultura after delete order 1 on Cultura
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+            INSERT INTO LogCultura (idCultura,
+                            idInvestigador,
+                            nomeCultura,
+                            limiteInferiorTemperatura,
+                            limiteSuperiorTemperatura,
+                            limiteInferiorHumidade,
+                            limiteSuperiorHumidade,
+                            utilizador,
+                            operacao,
+                            dataOperacao,
+                            idLogCultura)
+            VALUES         (old_del.idCultura,
+                            old_del.idInvestigador,
+                            old_del.nomeCultura,
+                            old_del.limiteInferiorTemperatura,
+                            old_del.limiteSuperiorTemperatura,
+                            old_del.limiteInferiorHumidade,
+                            old_del.limiteSuperiorHumidade,
+                            user_name(),
+                            'D',
+                            now() );
+end;
+
+
+create trigger tr_ins_Cultura after insert order 1 on Cultura
+referencing new as new_ins for each row
+begin 
+ INSERT INTO LogCultura (idCultura,
+                            idInvestigador,
+                            nomeCultura,
+                            limiteInferiorTemperatura,
+                            limiteSuperiorTemperatura,
+                            limiteInferiorHumidade,
+                            limiteSuperiorHumidade,
+                            utilizador,
+                            operacao,
+                            dataOperacao,
+                            idLogCultura)
+            VALUES         (new_ins.idCultura,
+                            new_ins.idInvestigador,
+                            new_ins.nomeCultura,
+                            new_ins.limiteInferiorTemperatura,
+                            new_ins.limiteSuperiorTemperatura,
+                            new_ins.limiteInferiorHumidade,
+                            new_ins.limiteSuperiorHumidade,
+                            user_name(),
+                            'I',
+                            now() );
+end;
+
+
+create trigger tr_upd_Cultura after update of idCultura,
+                                         idInvestigador
+order 1 on Cultura
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    
+           INSERT INTO LogCultura (idCultura,
+                            idInvestigador,
+                            nomeCultura,
+                            limiteInferiorTemperatura,
+                            limiteSuperiorTemperatura,
+                            limiteInferiorHumidade,
+                            limiteSuperiorHumidade,
+                            utilizador,
+                            operacao,
+                            dataOperacao,
+                            idLogCultura)
+            VALUES         (new_upd.idCultura,
+                            new_upd.idInvestigador,
+                            new_upd.nomeCultura,
+                            new_upd.limiteInferiorTemperatura,
+                            new_upd.limiteSuperiorTemperatura,
+                            new_upd.limiteInferiorHumidade,
+                            new_upd.limiteSuperiorHumidade,
+                            user_name(),
+                            'U',
+                            now() );
+end;
+
+
+create trigger tr_del_Investigador after delete order 1 on Investigador
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    insert into LogInvestigador (idIbvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+            VALUES              (old_del.idInvestigador,
+                                 old_del.email,
+                                 old_del.nomeInvestigador,
+                                 user_name(),
+                                 'D',
+                                 now() );
+end;
+
+
+create trigger tr_ins_Investigadior after insert order 1 on Investigador
+referencing new as new_ins for each row
+begin 
+ INSERT INTO LogInvestigador (idInvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+    VALUES                      (new_ins.idInvestigador,
+                                 new_ins.email,
+                                 new_ins.nomeInvestigador,
+                                 user_name(),
+                                 'I',
+                                 now() );
+end;
+
+
+create trigger tr_upd_Investigador after update of idInvestigador
+order 1 on Investigador
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    insert into LogInvestigador (idInvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+            VALUES              (new_upd.idInvestigador,
+                                 new_upd.email,
+                                 new_upd.nomeInvestigador,
+                                 user_name(),
+                                 'U',
+                                 now())
+                                 ;
+end;
+
+
+create trigger tr_del_Medicoes after delete order 1 on Medicoes
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     numeroMedicao,
+                                     dataMedicao,
+                                     horaMedicao,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (old_del.idCultura,
+                                     old_del.idVariavel,
+                                     old_del.numeroMedicao,
+                                     old_del.dataMedicao,
+                                     old_del.horaMedicao,
+                                     user_name(),
+                                     'D',
+                                     now() );    
+end;
+
+
+create trigger tr_ins_Medicoes after insert order 1 on Medicoes
+referencing new as new_ins for each row
+begin 
+ INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     numeroMedicao,
+                                     dataMedicao,
+                                     horaMedicao,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_ins.idCultura,
+                                     new_ins.idVariavel,
+                                     new_ins.numeroMedicao,
+                                     new_ins.dataMedicao,
+                                     new_ins.horaMedicao,
+                                     user_name(),
+                                     'I',
+                                     now() );
+end;
+
+
+create trigger tr_upd_Medicoes after update of idCultura,
+                                         idVariavel,
+                                         numeroMedicao
+order 1 on Medicoes
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     numeroMedicao,
+                                     dataMedicao,
+                                     horaMedicao,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_upd.idCultura,
+                                     new_upd.idVariavel,
+                                     new_upd.numeroMedicao,
+                                     new_upd.dataMedicao,
+                                     new_upd.horaMedicao,
+                                     user_name(),
+                                     'U',
+                                     now() );    
+end;
+
+
+create trigger tr_del_Variaveis after delete order 1 on Variaveis
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+                INSERT INTO LogVariaveis (idVariavel,
+                              nomeVariavel,
+                              utilizador,
+                              operacao,
+                              dataOperacao,
+                              idLogVariaveis)
+            VALUES           (old_del.idVariavel,
+                              old_del.nomeVariavel,
+                              user_name(),
+                              'D',
+                              now() );
+end;
+
+
+create trigger tr_ins_Variaveis after insert order 1 on Variaveis
+referencing new as new_ins for each row
+begin 
+ INSERT INTO LogVariaveis (idVariavel,
+                              nomeVariavel,
+                              utilizador,
+                              operacao,
+                              dataOperacao,
+                              idLogVariaveis)
+            VALUES           (new_ins.idVariavel,
+                              new_ins.nomeVariavel,
+                              user_name(),
+                              'I',
+                              now() );
+end;
+
+
+create trigger tr_upd_Variaveis after update of idVariavel
+order 1 on Variaveis
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+            INSERT INTO LogVariaveis (idVariavel,
+                              nomeVariavel,
+                              utilizador,
+                              operacao,
+                              dataOperacao,
+                              idLogVariaveis)
+            VALUES           (new_upd.idVariavel,
+                              new_upd.nomeVariavel,
+                              user_name(),
+                              'U',
+                              now() );
+end;
+
+
+create trigger tr_del_VariaveisMedidas after delete order 1 on VariaveisMedidas
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+     INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (old_del.idCultura,
+                                     old_del.idVariavel,
+                                     old_del.limiteInferior,
+                                     old_del.limiteSuperior,
+                                     user_name(),
+                                     'D',
+                                     now() );
+end;
+
+
+create trigger tr_ins_VariaveisMedidas after insert order 1 on VariaveisMedidas
+referencing new as new_ins for each row
+begin 
+INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_ins.idCultura,
+                                     new_ins.idVariavel,
+                                     new_ins.limiteInferior,
+                                     new_ins.limiteSuperior,
+                                     user_name(),
+                                     'I',
+                                     now() );
+end;
+
+
+create trigger tr_upd_VariaveisMedidas after update of idCultura,
+                                         idVariavel
+order 1 on VariaveisMedidas
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+        INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_upd.idCultura,
+                                     new_upd.idVariavel,
+                                     new_upd.limiteInferior,
+                                     new_upd.limiteSuperior,
+                                     user_name(),
+                                     'U',
+                                     now() );
+end;
 

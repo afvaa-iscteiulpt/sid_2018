@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     04/03/2018 21:29:16                          */
+/* Created on:     05/03/2018 19:13:32                          */
 /*==============================================================*/
 
 
@@ -28,10 +28,10 @@ create table LogCultura
    limiteSuperiorTemperatura decimal(8,2) not null,
    limiteInferiorHumidade decimal(8,2) not null,
    limiteSuperiorHumidade decimal(8,2) not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogCultura         bigint not null auto_increment,
+   idLogCultura         int not null auto_increment,
    primary key (idLogCultura)
 );
 
@@ -43,10 +43,10 @@ create table LogInvestigador
    idInvestigador       int not null,
    email                varchar(50) not null,
    nomeInvestigador     varchar(100) not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogInvestigador    bigint not null auto_increment,
+   idLogInvestigador    int not null auto_increment,
    primary key (idLogInvestigador)
 );
 
@@ -60,10 +60,10 @@ create table LogMedicoes
    numeroMedicao        bigint not null,
    dataMedicao          date not null,
    horaMedicao          time not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogMedicoes        bigint not null auto_increment,
+   idLogMedicoes        int not null auto_increment,
    primary key (idLogMedicoes)
 );
 
@@ -72,9 +72,9 @@ create table LogMedicoes
 /*==============================================================*/
 create table LogSelect
 (
-   idLogSelect          bigint not null auto_increment,
+   idLogSelect          int not null auto_increment,
    comandoSelect        varchar(1024) not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
    primary key (idLogSelect)
@@ -87,10 +87,10 @@ create table LogVariaveis
 (
    idVariavel           int not null,
    nomeVariavel         varchar(100) not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogVariaveis       bigint not null auto_increment,
+   idLogVariaveis       int not null auto_increment,
    primary key (idLogVariaveis)
 );
 
@@ -103,10 +103,10 @@ create table LogVariaveisMedidas
    idVariavel           int not null,
    limiteInferior       decimal(8,2) not null,
    limiteSuperior       decimal(8,2) not null,
-   utilizador           int not null,
+   utilizador           varchar(50) not null,
    operacao             char(1),
    dataOperacao         timestamp,
-   idLogVariaveisMedidas bigint not null auto_increment,
+   idLogVariaveisMedidas int not null auto_increment,
    primary key (idLogVariaveisMedidas)
 );
 
