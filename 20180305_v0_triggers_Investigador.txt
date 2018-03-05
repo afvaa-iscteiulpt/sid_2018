@@ -1,0 +1,63 @@
+drop trigger if exists tr_ins_Investigador;
+create trigger tr_ins_Investigador after insert order 1 on Investigador
+referencing new as new_ins for each row
+begin 
+    INSERT INTO LogInvestigador (idInvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+    VALUES                      (new_ins.idInvestigador,
+                                 new_ins.email,
+                                 new_ins.nomeInvestigador,
+                                 user_name(),
+                                 'I',
+                                 now() );
+end;
+
+drop trigger if exists tr_del_Investigador;
+create trigger tr_del_Investigador after delete order 1 on Investigador
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    
+     insert into LogInvestigador (idIbvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+            VALUES              (old_del.idInvestigador,
+                                 old_del.email,
+                                 old_del.nomeInvestigador,
+                                 user_name(),
+                                 'D',
+                                 now() );
+end;
+
+drop trigger if exists tr_upd_Investigador;
+create trigger tr_upd_Investigador after update of idInvestigador
+order 1 on Investigador
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    insert into LogInvestigador (idInvestigador,
+                                 email,
+                                 nomeInvestigador,
+                                 utilizador,
+                                 operacao,
+                                 dataOperacao,
+                                 idLogInvestigador)
+            VALUES              (new_upd.idInvestigador,
+                                 new_upd.email,
+                                 new_upd.nomeInvestigador,
+                                 user_name(),
+                                 'U',
+                                 now())
+                                 ;
+end;
