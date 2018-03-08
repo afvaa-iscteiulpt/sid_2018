@@ -515,8 +515,7 @@ begin
                             limiteSuperiorHumidade,
                             utilizador,
                             operacao,
-                            dataOperacao,
-                            idLogCultura)
+                            dataOperacao)
             VALUES         (old_del.idCultura,
                             old_del.idInvestigador,
                             old_del.nomeCultura,
@@ -542,8 +541,7 @@ begin
                             limiteSuperiorHumidade,
                             utilizador,
                             operacao,
-                            dataOperacao,
-                            idLogCultura)
+                            dataOperacao)
             VALUES         (new_ins.idCultura,
                             new_ins.idInvestigador,
                             new_ins.nomeCultura,
@@ -574,8 +572,7 @@ begin
                             limiteSuperiorHumidade,
                             utilizador,
                             operacao,
-                            dataOperacao,
-                            idLogCultura)
+                            dataOperacao)
             VALUES         (new_upd.idCultura,
                             new_upd.idInvestigador,
                             new_upd.nomeCultura,
@@ -594,13 +591,12 @@ referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-    insert into LogInvestigador (idIbvestigador,
+    insert into LogInvestigador (idInvestigador,
                                  email,
                                  nomeInvestigador,
                                  utilizador,
                                  operacao,
-                                 dataOperacao,
-                                 idLogInvestigador)
+                                 dataOperacao)
             VALUES              (old_del.idInvestigador,
                                  old_del.email,
                                  old_del.nomeInvestigador,
@@ -618,8 +614,7 @@ begin
                                  nomeInvestigador,
                                  utilizador,
                                  operacao,
-                                 dataOperacao,
-                                 idLogInvestigador)
+                                 dataOperacao)
     VALUES                      (new_ins.idInvestigador,
                                  new_ins.email,
                                  new_ins.nomeInvestigador,
@@ -640,15 +635,13 @@ begin
                                  nomeInvestigador,
                                  utilizador,
                                  operacao,
-                                 dataOperacao,
-                                 idLogInvestigador)
+                                 dataOperacao)
             VALUES              (new_upd.idInvestigador,
                                  new_upd.email,
                                  new_upd.nomeInvestigador,
                                  user_name(),
                                  'U',
-                                 now())
-                                 ;
+                                 now());
 end;
 
 
@@ -657,15 +650,14 @@ referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-    INSERT INTO LogVariaveisMedidas (idCultura,
+    INSERT INTO LogMedicoes			(idCultura,
                                      idVariavel,
                                      numeroMedicao,
                                      dataMedicao,
                                      horaMedicao,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (old_del.idCultura,
                                      old_del.idVariavel,
                                      old_del.numeroMedicao,
@@ -680,15 +672,14 @@ end;
 create trigger tr_ins_Medicoes after insert order 1 on Medicoes
 referencing new as new_ins for each row
 begin 
- INSERT INTO LogVariaveisMedidas (idCultura,
+ INSERT INTO LogMedicoes 			(idCultura,
                                      idVariavel,
                                      numeroMedicao,
                                      dataMedicao,
                                      horaMedicao,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (new_ins.idCultura,
                                      new_ins.idVariavel,
                                      new_ins.numeroMedicao,
@@ -708,15 +699,14 @@ referencing new as new_upd old as old_upd for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-    INSERT INTO LogVariaveisMedidas (idCultura,
+    INSERT INTO LogMedicoes 		(idCultura,
                                      idVariavel,
                                      numeroMedicao,
                                      dataMedicao,
                                      horaMedicao,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (new_upd.idCultura,
                                      new_upd.idVariavel,
                                      new_upd.numeroMedicao,
@@ -733,12 +723,11 @@ referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-                INSERT INTO LogVariaveis (idVariavel,
+            INSERT INTO LogVariaveis (idVariavel,
                               nomeVariavel,
                               utilizador,
                               operacao,
-                              dataOperacao,
-                              idLogVariaveis)
+                              dataOperacao)
             VALUES           (old_del.idVariavel,
                               old_del.nomeVariavel,
                               user_name(),
@@ -754,8 +743,7 @@ begin
                               nomeVariavel,
                               utilizador,
                               operacao,
-                              dataOperacao,
-                              idLogVariaveis)
+                              dataOperacao)
             VALUES           (new_ins.idVariavel,
                               new_ins.nomeVariavel,
                               user_name(),
@@ -774,8 +762,7 @@ begin
                               nomeVariavel,
                               utilizador,
                               operacao,
-                              dataOperacao,
-                              idLogVariaveis)
+                              dataOperacao)
             VALUES           (new_upd.idVariavel,
                               new_upd.nomeVariavel,
                               user_name(),
@@ -795,8 +782,7 @@ begin
                                      limiteSuperior,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (old_del.idCultura,
                                      old_del.idVariavel,
                                      old_del.limiteInferior,
@@ -816,8 +802,7 @@ INSERT INTO LogVariaveisMedidas (idCultura,
                                      limiteSuperior,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (new_ins.idCultura,
                                      new_ins.idVariavel,
                                      new_ins.limiteInferior,
@@ -841,8 +826,7 @@ begin
                                      limiteSuperior,
                                      utilizador,
                                      operacao,
-                                     dataOperacao,
-                                     idLogVariaveisMedidas)
+                                     dataOperacao)
             VALUES                  (new_upd.idCultura,
                                      new_upd.idVariavel,
                                      new_upd.limiteInferior,
