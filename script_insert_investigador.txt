@@ -1,5 +1,0 @@
-insert INTO dba.Investigador (email, nomeInvestigador) 
-values 
-('a@gmail.com', 'a da silva'),
-('b@gmail.com', 'b da silva')
-;

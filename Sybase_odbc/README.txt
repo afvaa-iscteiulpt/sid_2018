@@ -1,0 +1,1 @@
+Pasta com todos os ficheiros necessários para correr a base de dados SQL Anywhere com migração ODBC
