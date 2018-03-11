@@ -33,11 +33,11 @@ select
    antigo.operacao as operacao_old,
    antigo.dataOperacao as dataOperacao_old
 from
-   dba.LogInvestigador novo,
-   dba.LogInvestigador antigo
+   LogInvestigador AS novo,
+   LogInvestigador AS antigo
 where
    novo.operacao = 'U'
-   AND antigo.idLogInvestigador = (select max(idlogInvestigador) from dba.LogInvestigador where idInvestigador = novo.idInvestigador and idLogInvestigador < novo.idLogInvestigador) 
+   AND antigo.idLogInvestigador = (select max(idlogInvestigador) from LogInvestigador where idInvestigador = novo.idInvestigador and idLogInvestigador < novo.idLogInvestigador) 
    ;
 
 CREATE VIEW V_Upd_Variaveis AS
@@ -52,10 +52,10 @@ SELECT  novo.idLogVariaveis as idLogVariaveis_new,
         antigo.utilizador as utilizador_old,
         antigo.operacao as operacao_old,  
         antigo.dataOperacao as dataOperacao_old
-from dba.LogVariaveis as novo, dba.LogVariaveis as antigo
+from LogVariaveis as novo, LogVariaveis as antigo
 where novo.operacao ='U'
 AND  antigo.idLogVariaveis =(select max(idLogVariaveis) 
-                             from   dba.LogVariaveis
+                             from   LogVariaveis
                              where  idVariavel = novo.idVariavel
                              and    idLogVariaveis < novo.idLogVariaveis)
 ;
@@ -85,10 +85,10 @@ SELECT  novo.idLogCultura as idLogCultura_new,
         antigo.utilizador as utilizador_old,
         antigo.operacao as operacao_old,  
         antigo.dataOperacao as dataOperacao_old
-from dba.LogCultura as novo, dba.LogCultura as antigo
+from LogCultura as novo, LogCultura as antigo
 where novo.operacao ='U'
 AND  antigo.idLogCultura =(select max(idlogCultura) 
-                                 from   dba.LogCultura 
+                                 from   LogCultura 
                                  where  idCultura = novo.idCultura
                                  and    idLogCultura < novo.idLogCultura)
 ;
@@ -96,24 +96,24 @@ AND  antigo.idLogCultura =(select max(idlogCultura)
 CREATE VIEW V_Upd_VariaveisMedidas AS
 SELECT  novo.idLogVariaveisMedidas as idLogVariaveisMedidas_new,
 	    novo.idCultura,
-        novo.idVariavel,
+            novo.idVariavel,
 	    novo.limiteInferior as limiteInferior_new,
 	    novo.limiteSuperior as limiteSuperior_new,
-        novo.deleted as deleted_new,
-        novo.utilizador as utilizador_new,
-        novo.operacao as operacao_new,
-        novo.dataOperacao as dataOperacao_new, 
-        antigo.idLogVariaveisMedidas as idLogVariaveisMedidas_old,
+            novo.deleted as deleted_new,
+            novo.utilizador as utilizador_new,
+            novo.operacao as operacao_new,
+            novo.dataOperacao as dataOperacao_new, 
+            antigo.idLogVariaveisMedidas as idLogVariaveisMedidas_old,
 	    antigo.limiteInferior as limiteInferior_old,
 	    antigo.limiteSuperior as limiteSuperior_old,
-        antigo.deleted as deleted_old,
-        antigo.utilizador as utilizador_old,
-        antigo.operacao as operacao_old,  
-        antigo.dataOperacao as dataOperacao_old
-from dba.LogVariaveisMedidas as novo, dba.LogVariaveisMedidas as antigo
+            antigo.deleted as deleted_old,
+            antigo.utilizador as utilizador_old,
+            antigo.operacao as operacao_old,  
+            antigo.dataOperacao as dataOperacao_old
+from LogVariaveisMedidas as novo, LogVariaveisMedidas as antigo
 where novo.operacao ='U'
 AND  antigo.idLogVariaveisMedidas =(select max(idLogVariaveisMedidas) 
-                             	    from   dba.LogVariaveisMedidas
+                             	    from   LogVariaveisMedidas
                              	    where  idCultura = novo.idCultura
 				    and    idVariavel = novo.idVariavel
                              	    and    idLogVariaveisMedidas < novo.idLogVariaveisMedidas)
@@ -137,10 +137,10 @@ SELECT  novo.idLogMedicoes as idLogMedicoes_new,
         antigo.utilizador as utilizador_old,
         antigo.operacao as operacao_old,  
         antigo.dataOperacao as dataOperacao_old
-from dba.LogMedicoes as novo, dba.LogMedicoes as antigo
+from LogMedicoes as novo, LogMedicoes as antigo
 where novo.operacao ='U'
 AND  antigo.idLogMedicoes =(select max(idLogMedicoes) 
-                             	    from   dba.LogMedicoes
+                             	    from   LogMedicoes
                              	    where  idCultura = novo.idCultura
 				    and    idVariavel = novo.idVariavel
 				    and    numeroMedicao = novo.numeroMedicao
