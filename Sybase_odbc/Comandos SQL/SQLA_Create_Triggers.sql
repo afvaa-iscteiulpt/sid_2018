@@ -393,7 +393,7 @@ BEGIN
 	DECLARE fix_command VARCHAR(500);
     
     SELECT (
-        'SELECT (' + replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(arg_command, 
+        'SELECT (' + replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(arg_command, 
             ' Cultura ', ' LogCultura '),
             ',Cultura ', ',LogCultura '),
             ' Cultura,', ' LogCultura,'),
@@ -403,7 +403,9 @@ BEGIN
             ' Investigador,', ' LogInvestigador,'),
             ',Investigador,', ',LogInvestigador,'), 
             'Variaveis', 'LogVariaveis'), 
-            'Medicoes', 'LogMedicoes') + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
+            'Medicoes', 'LogMedicoes'),
+	    'HumidadeTemperatura', 'LogHumidadeTemperatura'), 
+	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
     INTO fix_command;
 
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
