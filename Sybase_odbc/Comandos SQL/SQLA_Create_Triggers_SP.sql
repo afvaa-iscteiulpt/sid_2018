@@ -404,7 +404,7 @@ BEGIN
             ',Investigador,', ',LogInvestigador,'), 
             'Variaveis', 'LogVariaveis'), 
             'Medicoes', 'LogMedicoes'),
-	    'HumidadeTemperatura', 'LogHumidadeTemperatura'), 
+	    'HumidadeTemperatura', 'LogHumidadeTemperatura')
 	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
     INTO fix_command;
 
