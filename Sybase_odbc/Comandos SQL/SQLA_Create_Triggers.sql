@@ -32,6 +32,8 @@ drop trigger if exists tr_ins_VariaveisMedidas;
 
 drop trigger if exists tr_upd_VariaveisMedidas;
 
+drop trigger if exists tr_beforeInsUpdMedicoes;
+
 create trigger tr_del_Cultura after delete order 1 on Cultura
 referencing old as old_del for each row
 begin
@@ -383,4 +385,18 @@ begin
                                      now() );
 end;
 
+create trigger tr_beforeInsUpdMedicoes before insert, update
+order 1 on Medicoes
+REFERENCING NEW AS new_medicao
+FOR EACH ROW
+BEGIN
+	DECLARE nomeInvestigador VARCHAR;
+
+    SELECT Investigador.email INTO nomeInvestigador FROM Cultura, Medicoes, Investigador
+    WHERE Medicoes.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
+
+    IF nomeInvestigador <> user_name() THEN 
+        RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'
+    END IF;
+END;
 
