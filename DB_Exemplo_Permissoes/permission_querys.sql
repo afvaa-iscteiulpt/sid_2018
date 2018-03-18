@@ -12,9 +12,9 @@ create user "Mongo";
 // Permissões para Investigadores terao que ser atualizadas para implementar Triggers/SPs
 // Para limitar por cultura pretencente ao respetivo investigador
 revoke all from "Investigadores";
-grant select, update on DBA.Cultura to "Investigadores";
-grant select on DBA.VariaveisMedidas to "Investigadores"; 
-grant select, insert, delete, update on DBA.Medicoes to "Investigadores"; 
+// Falta das grant aos views de select das tabelas Cultura, VariaveisMedidas e Medicoes
+grant update on DBA.Cultura to "Investigadores"; // Precisa de trigger before update
+grant insert, delete, update on DBA.Medicoes to "Investigadores";  // Precisa de trigger before update, delete, insert
 
 revoke all from "Administradores";
 grant select on DBA.HumidadeTemperatura to "Administradores";
