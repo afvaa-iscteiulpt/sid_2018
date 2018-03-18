@@ -32,7 +32,7 @@ drop trigger if exists tr_ins_VariaveisMedidas;
 
 drop trigger if exists tr_upd_VariaveisMedidas;
 
-drop procedure if exists sp_insLogSelects;
+drop trigger if exists tr_beforeInsUpdMedicoes;
 
 create trigger tr_del_Cultura after delete order 1 on Cultura
 referencing old as old_del for each row
@@ -385,29 +385,18 @@ begin
                                      now() );
 end;
 
-create procedure "DBA"."sp_insLogSelects"( 
-    IN arg_command VARCHAR(500) DEFAULT ''
-)
-/* RESULT( column_name column_type, ... ) */
+create trigger tr_beforeInsUpdMedicoes before insert, update
+order 1 on Medicoes
+REFERENCING NEW AS new_medicao
+FOR EACH ROW
 BEGIN
-	DECLARE fix_command VARCHAR(500);
-    
-    SELECT (
-        'SELECT (' + replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(arg_command, 
-            ' Cultura ', ' LogCultura '),
-            ',Cultura ', ',LogCultura '),
-            ' Cultura,', ' LogCultura,'),
-            ',Cultura,', ',LogCultura,'),
-            ' Investigador ', ' LogInvestigador '),
-            ',Investigador ', ',LogInvestigador '),
-            ' Investigador,', ' LogInvestigador,'),
-            ',Investigador,', ',LogInvestigador,'), 
-            'Variaveis', 'LogVariaveis'), 
-            'Medicoes', 'LogMedicoes'),
-	    'HumidadeTemperatura', 'LogHumidadeTemperatura')
-	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
-    INTO fix_command;
+	DECLARE nomeInvestigador VARCHAR;
 
-    INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
-    VALUES (fix_command, 1, CURRENT TIMESTAMP);
-END
+    SELECT Investigador.email INTO nomeInvestigador FROM Cultura, Medicoes, Investigador
+    WHERE Medicoes.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
+
+    IF nomeInvestigador <> user_name() THEN 
+        RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'
+    END IF;
+END;
+
