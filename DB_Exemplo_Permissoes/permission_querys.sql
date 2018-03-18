@@ -13,6 +13,7 @@ drop user "Mongo";
 create user "Mongo";
 
 revoke all from "Investigadores";
+-- falta o select
 grant insert, delete, update on DBA.VariaveisMedidas to "Investigadores";
 grant insert, delete, update on DBA.Medicoes to "Investigadores";
 
