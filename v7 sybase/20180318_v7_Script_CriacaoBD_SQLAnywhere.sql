@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Sybase SQL Anywhere 12                       */
-/* Created on:     18/03/2018 23:02:30                          */
+/* Created on:     19/03/2018 20:24:43                          */
 /*==============================================================*/
 
 
@@ -81,20 +81,6 @@ if exists(
 end if;
 
 drop table if exists LogCultura;
-
-drop index if exists LogHumidadeTemperatura.LOGHUMIDADETEMPERATURA_PK;
-
-if exists(
-   select 1 from sys.sysconstraint k
-      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogHumidadeTemperatura')
-   where
-      k.constraint_type = 'P'
-) then
-    alter table LogHumidadeTemperatura
-   delete primary key
-end if;
-
-drop table if exists LogHumidadeTemperatura;
 
 drop index if exists LogInvestigador.LOGINVESTIGADOR_PK;
 
@@ -325,6 +311,7 @@ create table HumidadeTemperatura
    valorMedicaoTemperatura decimal(8,2)                   not null,
    valorMedicaoHumidade decimal(8,2)                   not null,
    idMedicao            integer                        not null default autoincrement
+);
 
 alter table HumidadeTemperatura
    add constraint PK_HUMIDADETEMPERATURA primary key (idMedicao);
@@ -384,27 +371,6 @@ alter table LogCultura
 /*==============================================================*/
 create unique index LOGCULTURA_PK on LogCultura (
 idLogCultura ASC
-);
-
-/*==============================================================*/
-/* Table: LogHumidadeTemperatura                                */
-/*==============================================================*/
-create table LogHumidadeTemperatura 
-(
-   dataHoraMedicao      timestamp                      not null,
-   valorMedicaoTemperatura decimal(8,2)                   not null,
-   valorMedicaoHumidade decimal(8,2)                   not null,
-   idMedicao            integer                        not null
-);
-
-alter table LogHumidadeTemperatura
-   add constraint PK_LOGHUMIDADETEMPERATURA primary key (idMedicao);
-
-/*==============================================================*/
-/* Index: LOGHUMIDADETEMPERATURA_PK                             */
-/*==============================================================*/
-create unique index LOGHUMIDADETEMPERATURA_PK on LogHumidadeTemperatura (
-idMedicao ASC
 );
 
 /*==============================================================*/
