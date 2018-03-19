@@ -289,7 +289,7 @@ create sequence S_Variaveis;
 /*==============================================================*/
 create table Cultura 
 (
-   idCultura            integer                        not null default (S_Cultura.nextval),
+   idCultura            integer                        not null default autoincrement,
    idInvestigador       integer                        not null,
    nomeCultura          varchar(100)                   not null,
    limiteInferiorTemperatura decimal(8,2)                   not null,
@@ -324,8 +324,7 @@ create table HumidadeTemperatura
    dataHoraMedicao      timestamp                      not null,
    valorMedicaoTemperatura decimal(8,2)                   not null,
    valorMedicaoHumidade decimal(8,2)                   not null,
-   idMedicao            integer                        not null default (S_HumidadeTemperatura.nextval)
-);
+   idMedicao            integer                        not null default autoincrement
 
 alter table HumidadeTemperatura
    add constraint PK_HUMIDADETEMPERATURA primary key (idMedicao);
@@ -374,7 +373,7 @@ create table LogCultura
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogCultura         integer                        not null default (S_LogCultura.nextval)
+   idLogCultura         integer                        not null default autoincrement
 );
 
 alter table LogCultura
@@ -420,7 +419,7 @@ create table LogInvestigador
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogInvestigador    integer                        not null default (S_LogInvestigador.nextval)
+   idLogInvestigador    integer                        not null default autoincrement
 );
 
 alter table LogInvestigador
@@ -447,7 +446,7 @@ create table LogMedicoes
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogMedicoes        integer                        not null default (S_LogMedicoes.nextval)
+   idLogMedicoes        integer                        not null default autoincrement
 );
 
 alter table LogMedicoes
@@ -465,7 +464,7 @@ idLogMedicoes ASC
 /*==============================================================*/
 create table LogSelect 
 (
-   idLogSelect          integer                        not null default (S_LogSelect.nextval),
+   idLogSelect          integer                        not null default autoincrement,
    comandoSelect        varchar(1024)                  not null,
    utilizador           varchar(50)                    not null,
    dataOperacao         timestamp                      not null
@@ -492,7 +491,7 @@ create table LogVariaveis
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogVariaveis       integer                        not null default (S_LogVariaveis.nextval)
+   idLogVariaveis       integer                        not null default autoincrement
 );
 
 alter table LogVariaveis
@@ -518,7 +517,7 @@ create table LogVariaveisMedidas
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogVariaveisMedidas integer                        not null default (S_LogVariaveisMedidas.nextval)
+   idLogVariaveisMedidas integer                        not null default autoincrement
 );
 
 alter table LogVariaveisMedidas
@@ -538,7 +537,7 @@ create table Medicoes
 (
    idCultura            integer                        not null,
    idVariavel           integer                        not null,
-   numeroMedicao        bigint                         not null default (S_Medicoes.nextval),
+   numeroMedicao        bigint                         not null default autoincrement,
    dataHoraMedicao      timestamp                      not null,
    valorMedicao         decimal(8,2)                   not null,
    deleted              smallint                       not null
@@ -569,7 +568,7 @@ idVariavel ASC
 /*==============================================================*/
 create table Variaveis 
 (
-   idVariavel           integer                        not null default (S_Variaveis.nextval),
+   idVariavel           integer                        not null default autoincrement,
    nomeVariavel         varchar(100)                   not null,
    deleted              smallint                       not null
 );
