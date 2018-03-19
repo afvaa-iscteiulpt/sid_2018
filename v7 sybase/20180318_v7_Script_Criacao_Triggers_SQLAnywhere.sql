@@ -218,18 +218,22 @@ referencing new as new_ins for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-    
-    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = new_ins.email)
-        drop user new_ins.email;
+    declare utilizador varchar(50);
+    set utilizador = new_ins.email;
+
+    IF EXISTS (SELECT * FROM sysusers where sysusers.name = new_ins.email) THEN
+	DROP USER utilizador
     END IF;
-    CREATE USER new_ins.email IDENTIFIED BY 'senha';
-    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Investigadores')
-        GRANT MEMBERSHIP IN GROUP Investigadores TO new_ins.email;
+    CREATE USER utilizador IDENTIFIED BY 'senha';
+    IF EXISTS (SELECT * FROM sysusers where sysusers.name = 'Investigadores') THEN
+        GRANT MEMBERSHIP IN GROUP Investigadores TO utilizador
     ELSE
-        user_defined_exception = 'Não existe grupo defnido pars Investigadores';
-        RAISERROR '99999' user_defined_exception;
-        rollback;
-    END IF;      
+	begin 			
+        	set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
+        	RAISERROR 99999 user_defined_exception;
+        	rollback;
+	end
+    END IF;
 end;
 
 
@@ -238,9 +242,11 @@ referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
+    declare utilizador varchar(50);
+    set utilizador = old_del.email;
          
-    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_del.email)
-        drop user old_del.email;
+    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_del.email) THEN
+        DROP USER utilizador
     END IF;
  end;
 
@@ -251,24 +257,40 @@ referencing new as new_upd old as old_upd for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-   IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_upd.email)
-          IF (new_upd.deleted = true) OR (old_upd.email <> new_upd.email)then
-            -- Investigador "soft deleted" ou "anonimizado", ou com email alterado
-             drop user old_upd.email;
-          END IF
-          IF (old_upd.email <> new_upd.email) then
-                  IF (new_upd.email <> '') and (new_upd.email is not null)
-                        CREATE USER new_upd.email IDENTIFIED BY 'senha';
-                        IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Investigadores')
-                               GRANT MEMBERSHIP IN GROUP Investigadores TO new_upd.email;
-                        ELSE
-                               user_defined_exception = 'Não existe grupo defnido pars Investigadores';
-                               RAISERROR '99999' user_defined_exception;
-                               rollback;
-                         END IF
+
+    declare old_utilizador varchar(50);
+    declare new_utilizador varchar(50);
+    set old_utilizador = old_upd.email;
+    set new_utilizador = new_upd.email;
+
+   IF EXISTS ( SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_upd.email ) THEN
+	BEGIN
+          IF ( ( new_upd.deleted = true ) OR ( old_upd.email <> new_upd.email ) ) THEN
+		BEGIN
+            		-- Investigador "soft deleted" ou "anonimizado", ou com email alterado
+             		DROP USER old_utilizador;
+		END
+          END IF;
+--
+          IF ( old_utilizador <> new_utilizador ) THEN
+                  IF ( ( new_utilizador <> '') AND (new_utilizador is not null) ) THEN
+			BEGIN
+                        	CREATE USER new_utilizador IDENTIFIED BY 'senha';
+                        	IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Investigadores') THEN
+                               		GRANT MEMBERSHIP IN GROUP Investigadores TO new_utilizador;
+                        	ELSE
+			    		BEGIN 
+        					set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
+        					RAISERROR 99999 user_defined_exception;
+        					rollback;
+			    		END
+                         	END IF
+			END
                   END IF
           END IF
-   END IF
+--
+	END
+   END IF;
 end;
 
 
