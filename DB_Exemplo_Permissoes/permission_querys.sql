@@ -14,8 +14,10 @@ IF NOT EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'SuperAdmini
 create user "SuperAdministrador";
 
 // Table permissions
+// Falta das grant aos views de select das tabelas Cultura, VariaveisMedidas e Medicoes
 revoke all from "Investigadores";
 grant insert, update on DBA.Medicoes to "Investigadores";  // Precisa de trigger before update, delete, insert
+
 
 revoke all from "Administradores";
 grant select, insert, delete, update on DBA.HumidadeTemperatura to "Administradores";

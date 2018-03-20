@@ -1,45 +1,54 @@
 /*==============================================================*/
 /* DBMS name:      Sybase SQL Anywhere 12                       */
-/* Created on:     05/03/2018 19:12:19                          */
+/* Created on:     18/03/2018 23:04:14                          */
 /*==============================================================*/
-drop trigger if exists tr_del_Cultura;
 
-drop trigger if exists tr_ins_Cultura;
 
-drop trigger if exists tr_upd_Cultura;
+drop trigger if exists tr_after_del_Cultura;
 
-drop trigger if exists tr_del_Investigador;
+drop trigger if exists tr_after_ins_Cultura;
 
-drop trigger if exists tr_ins_Investigadior;
+drop trigger if exists tr_after_upd_Cultura;
 
-drop trigger if exists tr_upd_Investigador;
+drop trigger if exists tr_after_ins_HumidadeTemp;
 
-drop trigger if exists tr_del_Medicoes;
+drop trigger if exists tr_after_del_Investigador;
 
-drop trigger if exists tr_ins_Medicoes;
+drop trigger if exists tr_after_ins_Investigador;
 
-drop trigger if exists tr_upd_Medicoes;
+drop trigger if exists tr_after_upd_Investigadorr;
 
-drop trigger if exists tr_del_Variaveis;
+drop trigger if exists tr_before_Ins_Investigador;
 
-drop trigger if exists tr_ins_Variaveis;
+drop trigger if exists tr_before_del_Investigador;
 
-drop trigger if exists tr_upd_Variaveis;
+drop trigger if exists tr_before_upd_Investigador;
 
-drop trigger if exists tr_del_VariaveisMedidas;
+drop trigger if exists tr_after_del_Medicoes;
 
-drop trigger if exists tr_ins_VariaveisMedidas;
+drop trigger if exists tr_after_ins_Medicoes;
 
-drop trigger if exists tr_upd_VariaveisMedidas;
+drop trigger if exists tr_after_upd_Medicoes;
 
-drop procedure if exists sp_insLogSelects;
+drop trigger if exists tr_after_del_Variaveis;
 
-create trigger tr_del_Cultura after delete order 1 on Cultura
+drop trigger if exists tr_after_ins_Variaveis;
+
+drop trigger if exists tr_after_upd_Variaveis;
+
+drop trigger if exists tr_after_del_VariaveisMedidas;
+
+drop trigger if exists tr_after_ins_VariaveisMedidas;
+
+drop trigger if exists tr_after_upd_VariaveisMedidas;
+
+
+create trigger tr_after_del_Cultura after delete order 1 on Cultura
 referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-            INSERT INTO LogCultura (idCultura,
+           INSERT INTO LogCultura (idCultura,
                             idInvestigador,
                             nomeCultura,
                             limiteInferiorTemperatura,
@@ -63,10 +72,11 @@ begin
                             now() );
 end;
 
-create trigger tr_ins_Cultura after insert order 1 on Cultura
+
+create trigger tr_after_ins_Cultura after insert order 1 on Cultura
 referencing new as new_ins for each row
 begin 
- INSERT INTO LogCultura (   idCultura,
+INSERT INTO LogCultura (   idCultura,
                             idInvestigador,
                             nomeCultura,
                             limiteInferiorTemperatura,
@@ -90,7 +100,8 @@ begin
                             now() );
 end;
 
-create trigger tr_upd_Cultura after update of idCultura,
+
+create trigger tr_after_upd_Cultura after update of idCultura,
                                          idInvestigador
 order 1 on Cultura
 referencing new as new_upd old as old_upd for each row
@@ -116,18 +127,33 @@ begin
                             new_upd.limiteSuperiorTemperatura,
                             new_upd.limiteInferiorHumidade,
                             new_upd.limiteSuperiorHumidade,
-                            new_ins.deleted,
+                            new_upd.deleted,
                             user_name(),
                             'U',
                             now() );
 end;
 
-create trigger tr_del_Investigador after delete order 1 on Investigador
+
+create trigger tr_after_ins_HumidadeTemp after insert order 1 on HumidadeTemperatura
+referencing new as new_ins for each row
+begin 
+    INSERT INTO LogHumidadeTemperatura (dataHoraMedicao,
+                                        valorMedicaoTemperatura,
+                                        valorMedicaoHumidade,
+                                        idMedicao)
+            VALUES                      (new_ins.dataHoraMedicao,
+                                         new_ins.valorMedicaoTemperatura,
+                                         new_ins.valorMedicaoHumidade,
+                                         new_ins.idMedicao);
+end;
+
+
+create trigger tr_after_del_Investigador after delete order 1 on Investigador
 referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-    insert into LogInvestigador (idInvestigador,
+     insert into LogInvestigador (idInvestigador,
                                  email,
                                  nomeInvestigador,
                                  deleted,
@@ -143,9 +169,10 @@ begin
                                  now() );
 end;
 
-create trigger tr_ins_Investigadior after insert order 1 on Investigador
+
+create trigger tr_after_ins_Investigador after insert order 1 on Investigador
 referencing new as new_ins for each row
-begin 
+begin
  INSERT INTO LogInvestigador (idInvestigador,
                                  email,
                                  nomeInvestigador,
@@ -162,7 +189,8 @@ begin
                                  now() );
 end;
 
-create trigger tr_upd_Investigador after update of idInvestigador
+
+create trigger tr_after_upd_Investigadorr after update of idInvestigador
 order 1 on Investigador
 referencing new as new_upd old as old_upd for each row
 begin
@@ -184,7 +212,89 @@ begin
                                  now());
 end;
 
-create trigger tr_del_Medicoes after delete order 1 on Medicoes
+
+create trigger tr_before_Ins_Investigador before insert order 1 on Investigador
+referencing new as new_ins for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    declare utilizador varchar(50);
+    set utilizador = new_ins.email;
+
+    IF EXISTS (SELECT * FROM sysusers where sysusers.name = new_ins.email) THEN
+	DROP USER utilizador
+    END IF;
+    CREATE USER utilizador IDENTIFIED BY 'senha';
+    IF EXISTS (SELECT * FROM sysusers where sysusers.name = 'Investigadores') THEN
+        GRANT MEMBERSHIP IN GROUP Investigadores TO utilizador
+    ELSE
+	begin 			
+        	set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
+        	RAISERROR 99999 user_defined_exception;
+        	rollback;
+	end
+    END IF;
+end;
+
+
+create trigger tr_before_del_Investigador before delete order 1 on Investigador
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    declare utilizador varchar(50);
+    set utilizador = old_del.email;
+         
+    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_del.email) THEN
+        DROP USER utilizador
+    END IF;
+ end;
+
+
+create trigger tr_before_upd_Investigador before update of idInvestigador
+order 1 on Investigador
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+
+    declare old_utilizador varchar(50);
+    declare new_utilizador varchar(50);
+    set old_utilizador = old_upd.email;
+    set new_utilizador = new_upd.email;
+
+   IF EXISTS ( SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_upd.email ) THEN
+	BEGIN
+          IF ( ( new_upd.deleted = true ) OR ( old_upd.email <> new_upd.email ) ) THEN
+		BEGIN
+            		-- Investigador "soft deleted" ou "anonimizado", ou com email alterado
+             		DROP USER old_utilizador;
+		END
+          END IF;
+--
+          IF ( old_utilizador <> new_utilizador ) THEN
+                  IF ( ( new_utilizador <> '') AND (new_utilizador is not null) ) THEN
+			BEGIN
+                        	CREATE USER new_utilizador IDENTIFIED BY 'senha';
+                        	IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Investigadores') THEN
+                               		GRANT MEMBERSHIP IN GROUP Investigadores TO new_utilizador;
+                        	ELSE
+			    		BEGIN 
+        					set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
+        					RAISERROR 99999 user_defined_exception;
+        					rollback;
+			    		END
+                         	END IF
+			END
+                  END IF
+          END IF
+--
+	END
+   END IF;
+end;
+
+
+create trigger tr_after_del_Medicoes after delete order 1 on Medicoes
 referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
@@ -192,8 +302,7 @@ begin
     INSERT INTO LogMedicoes			(idCultura,
                                      idVariavel,
                                      numeroMedicao,
-                                     dataMedicao,
-                                     horaMedicao,
+                                     dataHoraMedicao,
                                      deleted,
                                      utilizador,
                                      operacao,
@@ -201,22 +310,21 @@ begin
             VALUES                  (old_del.idCultura,
                                      old_del.idVariavel,
                                      old_del.numeroMedicao,
-                                     old_del.dataMedicao,
-                                     old_del.horaMedicao,
+                                     old_del.dataHoraMedicao,
                                      old_del.deleted,
                                      user_name(),
                                      'D',
-                                     now() );    
+                                     now() ); 
 end;
 
-create trigger tr_ins_Medicoes after insert order 1 on Medicoes
+
+create trigger tr_after_ins_Medicoes after insert order 1 on Medicoes
 referencing new as new_ins for each row
 begin 
  INSERT INTO LogMedicoes 			(idCultura,
                                      idVariavel,
                                      numeroMedicao,
-                                     dataMedicao,
-                                     horaMedicao,
+                                     dataHoraMedicao,
                                      deleted,
                                      utilizador,
                                      operacao,
@@ -224,15 +332,15 @@ begin
             VALUES                  (new_ins.idCultura,
                                      new_ins.idVariavel,
                                      new_ins.numeroMedicao,
-                                     new_ins.dataMedicao,
-                                     new_ins.horaMedicao,
+                                     new_ins.dataHoraMedicao,
                                      new_ins.deleted,
                                      user_name(),
                                      'I',
                                      now() );
 end;
 
-create trigger tr_upd_Medicoes after update of idCultura,
+
+create trigger tr_after_upd_Medicoes after update of idCultura,
                                          idVariavel,
                                          numeroMedicao
 order 1 on Medicoes
@@ -243,8 +351,7 @@ begin
     INSERT INTO LogMedicoes 		(idCultura,
                                      idVariavel,
                                      numeroMedicao,
-                                     dataMedicao,
-                                     horaMedicao,
+                                     dataHoraMedicao,
                                      deleted,
                                      utilizador,
                                      operacao,
@@ -252,20 +359,20 @@ begin
             VALUES                  (new_upd.idCultura,
                                      new_upd.idVariavel,
                                      new_upd.numeroMedicao,
-                                     new_upd.dataMedicao,
-                                     new_upd.horaMedicao,
+                                     new_upd.dataHoraMedicao,
                                      new_upd.deleted,
                                      user_name(),
                                      'U',
-                                     now() );    
+                                     now() );       
 end;
 
-create trigger tr_del_Variaveis after delete order 1 on Variaveis
+
+create trigger tr_after_del_Variaveis after delete order 1 on Variaveis
 referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-            INSERT INTO LogVariaveis (idVariavel,
+    INSERT INTO LogVariaveis (idVariavel,
                               nomeVariavel,
                               deleted,
                               utilizador,
@@ -279,10 +386,11 @@ begin
                               now() );
 end;
 
-create trigger tr_ins_Variaveis after insert order 1 on Variaveis
+
+create trigger tr_after_ins_Variaveis after insert order 1 on Variaveis
 referencing new as new_ins for each row
 begin 
- INSERT INTO LogVariaveis (idVariavel,
+INSERT INTO LogVariaveis (idVariavel,
                               nomeVariavel,
                               deleted,
                               utilizador,
@@ -296,13 +404,14 @@ begin
                               now() );
 end;
 
-create trigger tr_upd_Variaveis after update of idVariavel
+
+create trigger tr_after_upd_Variaveis after update of idVariavel
 order 1 on Variaveis
 referencing new as new_upd old as old_upd for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-            INSERT INTO LogVariaveis (idVariavel,
+    INSERT INTO LogVariaveis (idVariavel,
                               nomeVariavel,
                               deleted,
                               utilizador,
@@ -316,12 +425,13 @@ begin
                               now() );
 end;
 
-create trigger tr_del_VariaveisMedidas after delete order 1 on VariaveisMedidas
+
+create trigger tr_after_del_VariaveisMedidas after delete order 1 on VariaveisMedidas
 referencing old as old_del for each row
 begin
     declare user_defined_exception exception for SQLSTATE '99999';
     declare found integer;
-     INSERT INTO LogVariaveisMedidas (idCultura,
+    INSERT INTO LogVariaveisMedidas (idCultura,
                                      idVariavel,
                                      limiteInferior,
                                      limiteSuperior,
@@ -339,7 +449,8 @@ begin
                                      now() );
 end;
 
-create trigger tr_ins_VariaveisMedidas after insert order 1 on VariaveisMedidas
+
+create trigger tr_after_ins_VariaveisMedidas after insert order 1 on VariaveisMedidas
 referencing new as new_ins for each row
 begin 
 INSERT INTO LogVariaveisMedidas (idCultura,
@@ -360,7 +471,8 @@ INSERT INTO LogVariaveisMedidas (idCultura,
                                      now() );
 end;
 
-create trigger tr_upd_VariaveisMedidas after update of idCultura,
+
+create trigger tr_after_upd_VariaveisMedidas after update of idCultura,
                                          idVariavel
 order 1 on VariaveisMedidas
 referencing new as new_upd old as old_upd for each row
@@ -385,29 +497,3 @@ begin
                                      now() );
 end;
 
-create procedure "DBA"."sp_insLogSelects"( 
-    IN arg_command VARCHAR(500) DEFAULT ''
-)
-/* RESULT( column_name column_type, ... ) */
-BEGIN
-	DECLARE fix_command VARCHAR(500);
-    
-    SELECT (
-        'SELECT (' + replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(arg_command, 
-            ' Cultura ', ' LogCultura '),
-            ',Cultura ', ',LogCultura '),
-            ' Cultura,', ' LogCultura,'),
-            ',Cultura,', ',LogCultura,'),
-            ' Investigador ', ' LogInvestigador '),
-            ',Investigador ', ',LogInvestigador '),
-            ' Investigador,', ' LogInvestigador,'),
-            ',Investigador,', ',LogInvestigador,'), 
-            'Variaveis', 'LogVariaveis'), 
-            'Medicoes', 'LogMedicoes'),
-	    'HumidadeTemperatura', 'LogHumidadeTemperatura')
-	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
-    INTO fix_command;
-
-    INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
-    VALUES (fix_command, 1, CURRENT TIMESTAMP);
-END
