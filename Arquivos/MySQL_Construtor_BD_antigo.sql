@@ -1,12 +1,10 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     18/03/2018 19:06:34                          */
+/* Created on:     10/03/2018 11:25:39                          */
 /*==============================================================*/
 
 
 drop table if exists LogCultura;
-
-drop table if exists LogHumidadeTemperatura;
 
 drop table if exists LogInvestigador;
 
@@ -24,30 +22,18 @@ drop table if exists LogVariaveisMedidas;
 create table LogCultura
 (
    idCultura            int not null,
-   IdInvestigador       int not null,
+   idInvestigador       int not null,
    nomeCultura          varchar(100) not null,
    limiteInferiorTemperatura decimal(8,2) not null,
    limiteSuperiorTemperatura decimal(8,2) not null,
    limiteInferiorHumidade decimal(8,2) not null,
    limiteSuperiorHumidade decimal(8,2) not null,
-   deleted              bool not null,
+   deleted              bool,
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
    idLogCultura         int not null,
    primary key (idLogCultura)
-);
-
-/*==============================================================*/
-/* Table: LogHumidadeTemperatura                                */
-/*==============================================================*/
-create table LogHumidadeTemperatura
-(
-   dataHoraMedicao      timestamp not null,
-   valorMedicaoTemperatura decimal(8,2) not null,
-   valorMedicaoHumidade decimal(8,2) not null,
-   idMedicao            bigint not null,
-   primary key (idMedicao)
 );
 
 /*==============================================================*/
@@ -58,7 +44,7 @@ create table LogInvestigador
    idInvestigador       int not null,
    email                varchar(50) not null,
    nomeInvestigador     varchar(100) not null,
-   deleted              bool not null,
+   deleted              bool,
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
@@ -74,9 +60,9 @@ create table LogMedicoes
    idCultura            int not null,
    idVariavel           int not null,
    numeroMedicao        bigint not null,
-   dataHoraMedicao      timestamp not null,
-   valorMedicao         decimal(8,2) not null,
-   deleted              bool not null,
+   dataMedicao          date not null,
+   horaMedicao          time not null,
+   deleted              bool,
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
@@ -120,10 +106,10 @@ create table LogVariaveisMedidas
    idVariavel           int not null,
    limiteInferior       decimal(8,2) not null,
    limiteSuperior       decimal(8,2) not null,
-   deleted              bool not null,
+   deleted              bool,
    utilizador           varchar(50) not null,
-   operacao             char(1) not null,
-   dataOperacao         timestamp not null,
+   operacao             char(1),
+   dataOperacao         timestamp,
    idLogVariaveisMedidas int not null,
    primary key (idLogVariaveisMedidas)
 );

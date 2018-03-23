@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Sybase SQL Anywhere 12                       */
-/* Created on:     10/03/2018 11:27:34                          */
+/* Created on:     19/03/2018 20:24:43                          */
 /*==============================================================*/
 
 
@@ -28,37 +28,127 @@ drop index if exists Cultura.INVESTIGADORCULTURA_FK;
 
 drop index if exists Cultura.CULTURA_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='Cultura')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table Cultura
+   delete primary key
+end if;
+
 drop table if exists Cultura;
 
 drop index if exists HumidadeTemperatura.HUMIDADETEMPERATURA_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='HumidadeTemperatura')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table HumidadeTemperatura
+   delete primary key
+end if;
 
 drop table if exists HumidadeTemperatura;
 
 drop index if exists Investigador.INVESTIGADOR_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='Investigador')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table Investigador
+   delete primary key
+end if;
+
 drop table if exists Investigador;
 
 drop index if exists LogCultura.LOGCULTURA_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogCultura')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogCultura
+   delete primary key
+end if;
 
 drop table if exists LogCultura;
 
 drop index if exists LogInvestigador.LOGINVESTIGADOR_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogInvestigador')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogInvestigador
+   delete primary key
+end if;
+
 drop table if exists LogInvestigador;
 
 drop index if exists LogMedicoes.LOGMEDICOES_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogMedicoes')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogMedicoes
+   delete primary key
+end if;
 
 drop table if exists LogMedicoes;
 
 drop index if exists LogSelect.LOGSELECT_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogSelect')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogSelect
+   delete primary key
+end if;
+
 drop table if exists LogSelect;
 
 drop index if exists LogVariaveis.LOGVARIAVEIS_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogVariaveis')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogVariaveis
+   delete primary key
+end if;
+
 drop table if exists LogVariaveis;
 
 drop index if exists LogVariaveisMedidas.LOGVARIAVEISMEDIDAS_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='LogVariaveisMedidas')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table LogVariaveisMedidas
+   delete primary key
+end if;
 
 drop table if exists LogVariaveisMedidas;
 
@@ -66,9 +156,29 @@ drop index if exists Medicoes.MEDICOESVARMEDIDAS_FK;
 
 drop index if exists Medicoes.MEDICOES_PK;
 
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='Medicoes')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table Medicoes
+   delete primary key
+end if;
+
 drop table if exists Medicoes;
 
 drop index if exists Variaveis.VARIAVEIS_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='Variaveis')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table Variaveis
+   delete primary key
+end if;
 
 drop table if exists Variaveis;
 
@@ -77,6 +187,16 @@ drop index if exists VariaveisMedidas.VARIAVEISCULTURA_FK2;
 drop index if exists VariaveisMedidas.VARIAVEISCULTURA_FK;
 
 drop index if exists VariaveisMedidas.VARIAVEISMEDIDAS_PK;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='VariaveisMedidas')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table VariaveisMedidas
+   delete primary key
+end if;
 
 drop table if exists VariaveisMedidas;
 
@@ -162,9 +282,11 @@ create table Cultura
    limiteSuperiorTemperatura decimal(8,2)                   not null,
    limiteInferiorHumidade decimal(8,2)                   not null,
    limiteSuperiorHumidade decimal(8,2)                   not null,
-   deleted              smallint                       not null,
-   constraint PK_CULTURA primary key (idCultura)
+   deleted              smallint                       not null
 );
+
+alter table Cultura
+   add constraint PK_CULTURA primary key (idCultura);
 
 /*==============================================================*/
 /* Index: CULTURA_PK                                            */
@@ -185,13 +307,14 @@ idInvestigador ASC
 /*==============================================================*/
 create table HumidadeTemperatura 
 (
-   dataMedicao          date                           not null,
-   horaMedicao          time                           not null,
+   dataHoraMedicao      timestamp                      not null,
    valorMedicaoTemperatura decimal(8,2)                   not null,
    valorMedicaoHumidade decimal(8,2)                   not null,
-   idMedicao            integer                        not null default autoincrement,
-   constraint PK_HUMIDADETEMPERATURA primary key (idMedicao)
+   idMedicao            integer                        not null default autoincrement
 );
+
+alter table HumidadeTemperatura
+   add constraint PK_HUMIDADETEMPERATURA primary key (idMedicao);
 
 /*==============================================================*/
 /* Index: HUMIDADETEMPERATURA_PK                                */
@@ -205,12 +328,14 @@ idMedicao ASC
 /*==============================================================*/
 create table Investigador 
 (
-   idInvestigador       integer                        not null,
+   idInvestigador       integer                        not null default autoincrement,
    email                varchar(50)                    not null,
    nomeInvestigador     varchar(100)                   not null,
-   deleted              smallint                       not null,
-   constraint PK_INVESTIGADOR primary key (idInvestigador)
+   deleted              smallint                       not null
 );
+
+alter table Investigador
+   add constraint PK_INVESTIGADOR primary key (idInvestigador);
 
 /*==============================================================*/
 /* Index: INVESTIGADOR_PK                                       */
@@ -225,19 +350,21 @@ idInvestigador ASC
 create table LogCultura 
 (
    idCultura            integer                        not null,
-   idInvestigador       integer                        not null,
+   IdInvestigador       integer                        not null,
    nomeCultura          varchar(100)                   not null,
    limiteInferiorTemperatura decimal(8,2)                   not null,
    limiteSuperiorTemperatura decimal(8,2)                   not null,
    limiteInferiorHumidade decimal(8,2)                   not null,
    limiteSuperiorHumidade decimal(8,2)                   not null,
-   deleted              smallint                       null,
+   deleted              smallint                       not null,
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogCultura         integer                        not null default autoincrement,
-   constraint PK_LOGCULTURA primary key (idLogCultura)
+   idLogCultura         integer                        not null default autoincrement
 );
+
+alter table LogCultura
+   add constraint PK_LOGCULTURA primary key (idLogCultura);
 
 /*==============================================================*/
 /* Index: LOGCULTURA_PK                                         */
@@ -254,13 +381,15 @@ create table LogInvestigador
    idInvestigador       integer                        not null,
    email                varchar(50)                    not null,
    nomeInvestigador     varchar(100)                   not null,
-   deleted              smallint                       null,
+   deleted              smallint                       not null,
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogInvestigador    integer                        not null default autoincrement,
-   constraint PK_LOGINVESTIGADOR primary key (idLogInvestigador)
+   idLogInvestigador    integer                        not null default autoincrement
 );
+
+alter table LogInvestigador
+   add constraint PK_LOGINVESTIGADOR primary key (idLogInvestigador);
 
 /*==============================================================*/
 /* Index: LOGINVESTIGADOR_PK                                    */
@@ -276,16 +405,18 @@ create table LogMedicoes
 (
    idCultura            integer                        not null,
    idVariavel           integer                        not null,
-   numeroMedicao        integer                        not null,
-   dataMedicao          date                           not null,
-   horaMedicao          time                           not null,
-   deleted              smallint                       null,
+   numeroMedicao        bigint                         not null,
+   dataHoraMedicao      timestamp                      not null,
+   valorMedicao         decimal(8,2)                   not null,
+   deleted              smallint                       not null,
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogMedicoes        integer                        not null default autoincrement,
-   constraint PK_LOGMEDICOES primary key (idLogMedicoes)
+   idLogMedicoes        integer                        not null default autoincrement
 );
+
+alter table LogMedicoes
+   add constraint PK_LOGMEDICOES primary key (idLogMedicoes);
 
 /*==============================================================*/
 /* Index: LOGMEDICOES_PK                                        */
@@ -302,9 +433,11 @@ create table LogSelect
    idLogSelect          integer                        not null default autoincrement,
    comandoSelect        varchar(1024)                  not null,
    utilizador           varchar(50)                    not null,
-   dataOperacao         timestamp                      not null,
-   constraint PK_LOGSELECT primary key (idLogSelect)
+   dataOperacao         timestamp                      not null
 );
+
+alter table LogSelect
+   add constraint PK_LOGSELECT primary key (idLogSelect);
 
 /*==============================================================*/
 /* Index: LOGSELECT_PK                                          */
@@ -324,9 +457,11 @@ create table LogVariaveis
    utilizador           varchar(50)                    not null,
    operacao             char(1)                        not null,
    dataOperacao         timestamp                      not null,
-   idLogVariaveis       integer                        not null default autoincrement,
-   constraint PK_LOGVARIAVEIS primary key (idLogVariaveis)
+   idLogVariaveis       integer                        not null default autoincrement
 );
+
+alter table LogVariaveis
+   add constraint PK_LOGVARIAVEIS primary key (idLogVariaveis);
 
 /*==============================================================*/
 /* Index: LOGVARIAVEIS_PK                                       */
@@ -344,13 +479,15 @@ create table LogVariaveisMedidas
    idVariavel           integer                        not null,
    limiteInferior       decimal(8,2)                   not null,
    limiteSuperior       decimal(8,2)                   not null,
-   deleted              smallint                       null,
+   deleted              smallint                       not null,
    utilizador           varchar(50)                    not null,
-   operacao             char(1)                        null,
-   dataOperacao         timestamp                      null,
-   idLogVariaveisMedidas integer                        not null default autoincrement,
-   constraint PK_LOGVARIAVEISMEDIDAS primary key (idLogVariaveisMedidas)
+   operacao             char(1)                        not null,
+   dataOperacao         timestamp                      not null,
+   idLogVariaveisMedidas integer                        not null default autoincrement
 );
+
+alter table LogVariaveisMedidas
+   add constraint PK_LOGVARIAVEISMEDIDAS primary key (idLogVariaveisMedidas);
 
 /*==============================================================*/
 /* Index: LOGVARIAVEISMEDIDAS_PK                                */
@@ -366,12 +503,14 @@ create table Medicoes
 (
    idCultura            integer                        not null,
    idVariavel           integer                        not null,
-   numeroMedicao        integer                        not null default autoincrement,
-   dataMedicao          date                           not null,
-   horaMedicao          time                           not null,
-   deleted              smallint                       not null,
-   constraint PK_MEDICOES primary key (idCultura, idVariavel, numeroMedicao)
+   numeroMedicao        bigint                         not null default autoincrement,
+   dataHoraMedicao      timestamp                      not null,
+   valorMedicao         decimal(8,2)                   not null,
+   deleted              smallint                       not null
 );
+
+alter table Medicoes
+   add constraint PK_MEDICOES primary key (idCultura, idVariavel, numeroMedicao);
 
 /*==============================================================*/
 /* Index: MEDICOES_PK                                           */
@@ -397,9 +536,11 @@ create table Variaveis
 (
    idVariavel           integer                        not null default autoincrement,
    nomeVariavel         varchar(100)                   not null,
-   deleted              smallint                       not null,
-   constraint PK_VARIAVEIS primary key (idVariavel)
+   deleted              smallint                       not null
 );
+
+alter table Variaveis
+   add constraint PK_VARIAVEIS primary key (idVariavel);
 
 /*==============================================================*/
 /* Index: VARIAVEIS_PK                                          */
@@ -417,9 +558,11 @@ create table VariaveisMedidas
    idVariavel           integer                        not null,
    limiteInferior       decimal(8,2)                   not null,
    limiteSuperior       decimal(8,2)                   not null,
-   deleted              smallint                       not null,
-   constraint PK_VARIAVEISMEDIDAS primary key (idCultura, idVariavel)
+   deleted              smallint                       not null
 );
+
+alter table VariaveisMedidas
+   add constraint PK_VARIAVEISMEDIDAS primary key (idCultura, idVariavel);
 
 /*==============================================================*/
 /* Index: VARIAVEISMEDIDAS_PK                                   */

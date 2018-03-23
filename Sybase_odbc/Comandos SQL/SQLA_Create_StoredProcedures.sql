@@ -34,6 +34,8 @@ BEGIN
 	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
     INTO fix_command;
 
+	/* Falta o IF para alterar o timestamp para ir buscar à tabela selecionada */
+	
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
     VALUES (fix_command, 1, CURRENT TIMESTAMP);
 END;
