@@ -61,8 +61,7 @@ SELECT
     Medicoes.idCultura,
     Medicoes.idVariavel,
     Medicoes.numeroMedicao,
-    Medicoes.dataMedicao,
-    Medicoes.horaMedicao,
+    Medicoes.dataHoraMedicao,
     Medicoes.deleted
 FROM Medicoes, CulturaPorInvestigador
 WHERE CulturaPorInvestigador.idCultura = Medicoes.idCultura AND Medicoes.deleted = 0;

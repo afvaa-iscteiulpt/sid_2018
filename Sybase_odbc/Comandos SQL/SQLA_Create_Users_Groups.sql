@@ -31,12 +31,3 @@ revoke all from "Mongo";
 grant insert on DBA.HumidadeTemperatura to "Mongo";
 
 revoke all from "SuperAdministrador";
-/*
-Como dar permissão para adicionar users (investigadores e admins) à base de dados em codigo sql?
-*/
-
-/*
-Ver como dar permissão para criar usários e atribuir grupos
-*/
-
-// Stored Procedure Permissions
