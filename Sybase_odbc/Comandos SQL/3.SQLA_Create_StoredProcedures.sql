@@ -41,12 +41,12 @@ BEGIN
 END;
 
 
-create procedure "DBA"."sp_softDeleteMedicoes"(IN arg_id INTEGER)
+create procedure "DBA"."sp_softDeleteMedicoes"(IN arg_id INTEGER, IN arg_idCult INTEGER, IN arg_idVar INTEGER)
 /* RESULT( column_name column_type, ... ) */
 BEGIN
 	UPDATE Medicoes
     SET deleted = 1
-    WHERE numeroMedicao = arg_id
+    WHERE numeroMedicao = arg_id AND idCultura = arg_idCult AND idVariavel = arg_idVar
 END;
 
 
