@@ -56,7 +56,7 @@ begin
                             limiteInferiorTemperatura,
                             limiteSuperiorTemperatura,
                             limiteInferiorHumidade,
-                            limiteSuperiorHumidade,
+							limiteSuperiorHumidade,
                             deleted,
                             utilizador,
                             operacao,
@@ -67,8 +67,8 @@ begin
                             old_del.limiteInferiorTemperatura,
                             old_del.limiteSuperiorTemperatura,
                             old_del.limiteInferiorHumidade,
+							old_del.limiteSuperiorHumidade,
                             old_del.deleted,
-                            limiteSuperiorHumidade,
                             user_name(),
                             'D',
                             now() );
@@ -135,7 +135,7 @@ begin
                             now() );
 end;
 
-
+/*
 create trigger tr_after_ins_HumidadeTemp after insert order 1 on HumidadeTemperatura
 referencing new as new_ins for each row
 begin 
@@ -148,7 +148,7 @@ begin
                                          new_ins.valorMedicaoHumidade,
                                          new_ins.idMedicao);
 end;
-
+*/
 
 create trigger tr_after_del_Investigador after delete order 1 on Investigador
 referencing old as old_del for each row
@@ -175,6 +175,7 @@ end;
 create trigger tr_after_ins_Investigador after insert order 1 on Investigador
 referencing new as new_ins for each row
 begin
+
  INSERT INTO LogInvestigador (idInvestigador,
                                  email,
                                  nomeInvestigador,
@@ -189,6 +190,7 @@ begin
                                  user_name(),
                                  'I',
                                  now() );
+
 end;
 
 
@@ -214,7 +216,7 @@ begin
                                  now());
 end;
 
-
+/*
 create trigger tr_before_Ins_Investigador before insert order 1 on Investigador
 referencing new as new_ins for each row
 begin
@@ -294,7 +296,7 @@ begin
 	END
    END IF;
 end;
-
+*/
 
 create trigger tr_after_del_Medicoes after delete order 1 on Medicoes
 referencing old as old_del for each row
@@ -305,6 +307,7 @@ begin
                                      idVariavel,
                                      numeroMedicao,
                                      dataHoraMedicao,
+									 valorMedicao,
                                      deleted,
                                      utilizador,
                                      operacao,
@@ -313,6 +316,7 @@ begin
                                      old_del.idVariavel,
                                      old_del.numeroMedicao,
                                      old_del.dataHoraMedicao,
+									 old_del.valorMedicao,
                                      old_del.deleted,
                                      user_name(),
                                      'D',
@@ -327,6 +331,7 @@ begin
                                      idVariavel,
                                      numeroMedicao,
                                      dataHoraMedicao,
+									 valorMedicao,
                                      deleted,
                                      utilizador,
                                      operacao,
@@ -335,6 +340,7 @@ begin
                                      new_ins.idVariavel,
                                      new_ins.numeroMedicao,
                                      new_ins.dataHoraMedicao,
+									 new_ins.valorMedicao,
                                      new_ins.deleted,
                                      user_name(),
                                      'I',
@@ -505,13 +511,16 @@ order 1 on Medicoes
 referencing new as new_medicao
 for each row
 begin
+	/*
 	DECLARE nomeInvestigador VARCHAR;
 
     SELECT Investigador.email INTO nomeInvestigador FROM Cultura, Medicoes, Investigador
     WHERE Medicoes.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
 
+	
     IF nomeInvestigador <> user_name() THEN 
         RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'
     END IF;
+	*/
 END;
 

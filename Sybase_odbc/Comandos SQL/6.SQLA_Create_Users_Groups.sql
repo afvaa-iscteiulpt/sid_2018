@@ -11,7 +11,7 @@ IF NOT EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Mongo')
 create user "Mongo";
 
 IF NOT EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'SuperAdministrador')
-create user "SuperAdministrador";
+create user "SuperAdministrador" IDENTIFIED by "password";
 
 // Table permissions
 // Falta das grant aos views de select das tabelas Cultura, VariaveisMedidas e Medicoes
