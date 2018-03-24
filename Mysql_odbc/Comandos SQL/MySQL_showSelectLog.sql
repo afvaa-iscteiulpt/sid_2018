@@ -1,8 +1,10 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_showSelectLog`(IN arg_command VARCHAR(1024))
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_showSelectLog`(IN _arg_command varchar(1024))
 BEGIN
-	SET @command=arg_command;
+	SET @command=_arg_command;
 
 	PREPARE stmt FROM @command;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
-END
+END $$
+DELIMITER ;
