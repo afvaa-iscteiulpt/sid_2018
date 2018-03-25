@@ -1,0 +1,71 @@
+drop trigger if exists tr_del_VariaveisMedidas;
+create trigger tr_del_VariaveisMedidas after delete order 1 on VariaveisMedidas
+referencing old as old_del for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (old_del.idCultura,
+                                     old_del.idVariavel,
+                                     old_del.limiteInferior,
+                                     old_del.limiteSuperior,
+                                     user_name(),
+                                     'D',
+                                     now() );
+end;
+
+
+drop trigger if exists tr_ins_VariaveisMedidas;
+create trigger tr_ins_VariaveisMedidas after insert order 1 on VariaveisMedidas
+referencing new as new_ins for each row
+begin 
+    INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_ins.idCultura,
+                                     new_ins.idVariavel,
+                                     new_ins.limiteInferior,
+                                     new_ins.limiteSuperior,
+                                     user_name(),
+                                     'I',
+                                     now() );
+end;
+
+
+drop trigger if exists tr_upd_VariaveisMedidas;
+create trigger tr_upd_VariaveisMedidas after update of idCultura,
+                                         idVariavel
+order 1 on VariaveisMedidas
+referencing new as new_upd old as old_upd for each row
+begin
+    declare user_defined_exception exception for SQLSTATE '99999';
+    declare found integer;
+    INSERT INTO LogVariaveisMedidas (idCultura,
+                                     idVariavel,
+                                     limiteInferior,
+                                     limiteSuperior,
+                                     utilizador,
+                                     operacao,
+                                     dataOperacao,
+                                     idLogVariaveisMedidas)
+            VALUES                  (new_upd.idCultura,
+                                     new_upd.idVariavel,
+                                     new_upd.limiteInferior,
+                                     new_upd.limiteSuperior,
+                                     user_name(),
+                                     'U',
+                                     now() );
+    
+end;
