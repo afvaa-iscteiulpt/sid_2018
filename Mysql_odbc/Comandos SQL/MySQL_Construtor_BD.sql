@@ -34,7 +34,7 @@ create table LogCultura
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogCultura         int not null,
+   idLogCultura int not null DEFAULT 0,
    primary key (idLogCultura)
 );
 
@@ -43,10 +43,10 @@ create table LogCultura
 /*==============================================================*/
 create table LogHumidadeTemperatura
 (
-   dataHoraMedicao      timestamp not null,
+   dataHoraMedicao      DATETIME not null,
    valorMedicaoTemperatura decimal(8,2) not null,
    valorMedicaoHumidade decimal(8,2) not null,
-   idMedicao            bigint not null,
+   idMedicao            bigint not null DEFAULT 0,
    primary key (idMedicao)
 );
 
@@ -62,7 +62,7 @@ create table LogInvestigador
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogInvestigador    int not null,
+   idLogInvestigador    int not null DEFAULT 0,
    primary key (idLogInvestigador)
 );
 
@@ -74,13 +74,13 @@ create table LogMedicoes
    idCultura            int not null,
    idVariavel           int not null,
    numeroMedicao        bigint not null,
-   dataHoraMedicao      timestamp not null,
+   dataHoraMedicao      DATETIME not null,
    valorMedicao         decimal(8,2) not null,
    deleted              bool not null,
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
-   dataOperacao         timestamp not null,
-   idLogMedicoes        int not null,
+   dataOperacao         DATETIME not null,
+   idLogMedicoes        int not null DEFAULT 0,
    primary key (idLogMedicoes)
 );
 
@@ -89,7 +89,7 @@ create table LogMedicoes
 /*==============================================================*/
 create table LogSelect
 (
-   idLogSelect          int not null,
+   idLogSelect          int not null DEFAULT 0,
    comandoSelect        varchar(1024) not null,
    utilizador           varchar(50) not null,
    dataOperacao         timestamp not null,
@@ -107,7 +107,7 @@ create table LogVariaveis
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogVariaveis       int not null,
+   idLogVariaveis       int not null DEFAULT 0,
    primary key (idLogVariaveis)
 );
 
@@ -124,7 +124,7 @@ create table LogVariaveisMedidas
    utilizador           varchar(50) not null,
    operacao             char(1) not null,
    dataOperacao         timestamp not null,
-   idLogVariaveisMedidas int not null,
+   idLogVariaveisMedidas int not null DEFAULT 0,
    primary key (idLogVariaveisMedidas)
 );
 
