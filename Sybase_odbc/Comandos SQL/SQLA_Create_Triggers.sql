@@ -327,7 +327,8 @@ begin
                                      idVariavel,
                                      numeroMedicao,
                                      dataHoraMedicao,
-                                     deleted,
+                                     valorMedicao,
+									 deleted,
                                      utilizador,
                                      operacao,
                                      dataOperacao)
@@ -335,6 +336,7 @@ begin
                                      new_ins.idVariavel,
                                      new_ins.numeroMedicao,
                                      new_ins.dataHoraMedicao,
+									 new_ins.valorMedicao,
                                      new_ins.deleted,
                                      user_name(),
                                      'I',
@@ -511,7 +513,7 @@ begin
     WHERE Medicoes.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
 
     IF nomeInvestigador <> user_name() THEN 
-        RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'
+        /*RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'*/
     END IF;
 END;
 

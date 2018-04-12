@@ -18,6 +18,9 @@ create user "SuperAdministrador";
 revoke all from "Investigadores";
 grant insert, update on DBA.Medicoes to "Investigadores";  // Precisa de trigger before update, delete, insert
 
+CREATE USER "Administrador Andre" IDENTIFIED BY 'pass';
+GRANT DBA, REMOTE DBA TO "Administrador Andre";
+
 
 revoke all from "Administradores";
 grant select, insert, delete, update on DBA.HumidadeTemperatura to "Administradores";
