@@ -331,8 +331,13 @@ begin
                                      idVariavel,
                                      numeroMedicao,
                                      dataHoraMedicao,
+<<<<<<< HEAD:Sybase_odbc/Comandos SQL/SQLA_Create_Triggers.sql
+                                     valorMedicao,
+									 deleted,
+=======
 									 valorMedicao,
                                      deleted,
+>>>>>>> 6138bc0b4b17d5756bf968c8c1ec3499b8e8df9e:Sybase_odbc/Comandos SQL/5.SQLA_Create_Triggers.sql
                                      utilizador,
                                      operacao,
                                      dataOperacao)
@@ -519,7 +524,7 @@ begin
 
 	
     IF nomeInvestigador <> user_name() THEN 
-        RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'
+        /*RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'*/
     END IF;
 	*/
 END;
