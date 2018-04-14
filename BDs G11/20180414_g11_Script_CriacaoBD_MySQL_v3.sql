@@ -2,7 +2,25 @@
 /* DBMS name:      MySQL 5.0                                    */
 /* Created on:     14/04/2018 10:11:30                          */
 /*==============================================================*/
+/* ----------------------- ----------*/
+/* início das tabelas antigas -------*/
+/* ----------------------- ----------*/
+drop table if exists LOGCONSULTAS;
 
+drop table if exists LOGCULTURA;
+
+drop table if exists LOGHUMIDADETEMPERATURA;
+
+drop table if exists LOGINVESTIGADORES;
+
+drop table if exists LOGMEDICOES;
+
+drop table if exists LOGVARIAVEIS;
+
+drop table if exists LOGVARIAVEISMEDIDAS;
+/* ----------------------- ----------*/
+/* fim das tabelas antigas ----------*/
+/* ----------------------- ----------*/
 
 drop table if exists LOG_CONSULTAS;
 

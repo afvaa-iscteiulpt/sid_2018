@@ -66,6 +66,76 @@ drop index if exists LOG_VARIAVEISMEDIDAS.LOGVARIAVEISMEDIDAS_PK;
 
 drop table if exists LOG_VARIAVEISMEDIDAS;
 
+/* --------------------------------------- */
+/* início das tabelas e índices antigos--- */
+/* --------------------------------------- */
+
+drop index if exists LOGCONSULTAS.LOGCONSULTAS_PK;
+
+drop table if exists LOGCONSULTAS;
+
+drop index if exists LOGCULTURA.LOGCULTURA_PK;
+
+drop table if exists LOGCULTURA;
+
+drop index if exists LOGHUMIDADETEMPERATURA.LOGHUMIDADETEMPERATURA_PK;
+
+drop table if exists LOGHUMIDADETEMPERATURA;
+
+drop index if exists LOGINVESTIGADORES.LOGINVESTIGADORES_PK;
+
+drop table if exists LOGINVESTIGADORES;
+
+drop index if exists LOGMEDICOES.LOGMEDICOES_PK;
+
+drop table if exists LOGMEDICOES;
+
+drop index if exists LOGVARIAVEIS.LOGVARIAVEIS_PK;
+
+drop table if exists LOGVARIAVEIS;
+
+drop index if exists LOGVARIAVEISMEDIDAS.LOGVARIAVEISMEDIDAS_PK;
+
+drop table if exists LOGVARIAVEISMEDIDAS;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGCONSULTAS') then
+      drop sequence S_LOGCONSULTAS
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGCULTURA') then
+      drop sequence S_LOGCULTURA
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGHUMIDADETEMPERATURA') then
+      drop sequence S_LOGHUMIDADETEMPERATURA
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGINVESTIGADORES') then
+      drop sequence S_LOGINVESTIGADORES
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGMEDICOES') then
+      drop sequence S_LOGMEDICOES
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGVARIAVEIS') then
+      drop sequence S_LOGVARIAVEIS
+end if;
+
+if exists(select 1 from sys.syssequence s
+   where sequence_name='S_LOGVARIAVEISMEDIDAS') then
+      drop sequence S_LOGVARIAVEISMEDIDAS
+end if;
+/* --------------------------------------- */
+/* fim das tabelas e índices antigos------ */
+/* --------------------------------------- */
+
 drop index if exists MEDICOES.VARIAVEISMEDIDAS_FK;
 
 drop index if exists MEDICOES.MEDICOES_PK;
