@@ -1,4 +1,4 @@
-ALTER PROCEDURE "DBA"."sp_GeraDados"( IN arg_id INTEGER )
+CREATE PROCEDURE "DBA"."sp_GeraDados"( IN arg_id INTEGER )
 
 BEGIN
     DECLARE intCount INTEGER;
