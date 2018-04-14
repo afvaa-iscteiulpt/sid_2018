@@ -331,13 +331,8 @@ begin
                                      idVariavel,
                                      numeroMedicao,
                                      dataHoraMedicao,
-<<<<<<< HEAD:Sybase_odbc/Comandos SQL/SQLA_Create_Triggers.sql
                                      valorMedicao,
 									 deleted,
-=======
-									 valorMedicao,
-                                     deleted,
->>>>>>> 6138bc0b4b17d5756bf968c8c1ec3499b8e8df9e:Sybase_odbc/Comandos SQL/5.SQLA_Create_Triggers.sql
                                      utilizador,
                                      operacao,
                                      dataOperacao)
@@ -516,16 +511,18 @@ order 1 on Medicoes
 referencing new as new_medicao
 for each row
 begin
-	/*
-	DECLARE nomeInvestigador VARCHAR;
+	DECLARE emailInvestigador VARCHAR(50);
+	DECLARE utilizadorLigado VARCHAR(50);
 
-    SELECT Investigador.email INTO nomeInvestigador FROM Cultura, Medicoes, Investigador
-    WHERE Medicoes.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
+    SELECT Investigador.email INTO emailInvestigador FROM Cultura, Medicoes, Investigador
+    WHERE new_medicao.idCultura = Cultura.idCultura AND Cultura.idInvestigador = Investigador.idInvestigador;
 
+	SELECT Investigador.email INTO utilizadorLigado FROM Investigador
+	WHERE Investigador.email = user_name();
 	
-    IF nomeInvestigador <> user_name() THEN 
-        /*RAISERROR 23000 'Não pode alterar medicoes de culturas de outros investigadores'*/
+    IF emailInvestigador <> user_name() AND utilizadorLigado IS NOT NULL THEN 
+        RAISERROR 23000 'Nao pode alterar medicoes de culturas de outros investigadores'
     END IF;
-	*/
+	
 END;
 
