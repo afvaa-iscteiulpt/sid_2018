@@ -30,18 +30,15 @@ grant select on DBA.Medicoes to "Administrador";
 grant select, insert, delete, update on DBA.Variaveis to "Administrador";
 grant select, insert, delete, update on DBA.VariaveisMedidas to "Administrador";
 
-/*==============================================================*/
-/* Grant Views Permissions              						*/
-/*==============================================================*/
+// LOGS
+grant select on DBA.log_variaveis to "Administrador";
+grant select on DBA.log_consultas to "Administrador";
+grant select on DBA.log_medicoes to "Administrador";
+grant select on DBA.log_cultura to "Administrador";
+grant select on DBA.log_humidadetemperatura to "Administrador";
+grant select on DBA.log_variaveismedidas to "Administrador";
+grant select on DBA.log_investigadores to "Administrador";
 
-/*
-INVESTIGADORES
-*/
-grant select on InvestigadorPorInvestigador to "Investigadores";
-grant select on CulturaPorInvestigador to "Investigadores";
-grant select on VariaveisPorInvestigador to "Investigadores";
-grant select on VariaveisMedidasPorInvestigador to "Investigadores";
-grant select on MedicoesPorInvestigador to "Investigadores";
 
 /*==============================================================*/
 /* Grant Stored Procedures Permissions      					*/
@@ -57,6 +54,7 @@ grant execute on consultCulturas to "Investigadores";
 grant execute on consultHumidadeTemperatura to "Investigadores";
 grant execute on consultVariaveis to "Investigadores";
 grant execute on consultVariaveisMedidas to "Investigadores";
+grant execute on consultMedicoes to "Investigadores";
 
 /*
 ADMINISTRADORES
