@@ -17,28 +17,40 @@ create procedure "DBA"."sp_insLogSelects"(
 /* RESULT( column_name column_type, ... ) */
 BEGIN
 	DECLARE fix_command VARCHAR(500);
+
+    EXECUTE (arg_command);
     
     SELECT (
-        'SELECT (' + replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(arg_command, 
-            ' Cultura ', ' LogCultura '),
-            ',Cultura ', ',LogCultura '),
-            ' Cultura,', ' LogCultura,'),
-            ',Cultura,', ',LogCultura,'),
-            ' Investigador ', ' LogInvestigador '),
-            ',Investigador ', ',LogInvestigador '),
-            ' Investigador,', ' LogInvestigador,'),
-            ',Investigador,', ',LogInvestigador,'), 
-            'Variaveis', 'LogVariaveis'), 
-            'Medicoes', 'LogMedicoes'),
-			'HumidadeTemperatura', 'LogHumidadeTemperatura') 
-	    + ') WHERE dataOperacao < ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
+        'SELECT (' + replace(replace(replace(replace(replace(arg_command, 
+            'DBA.CulturaPorInvestigador', 'LogCultura'),
+            'DBA.InvestigadorPorInvestigador', 'LogInvestigador'),
+            'DBA.VariaveisPorInvestigador', 'LogVariaveis'), 
+            'DBA.MedicoesPorInvestigador', 'LogMedicoes'),
+			'DBA.HumidadeTemperatura', 'LogHumidadeTemperatura') 
+	    + ') WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
     INTO fix_command;
 
-	/* Falta o IF para alterar o timestamp para ir buscar à tabela selecionada */
-	
+	IF (charindex('LogCultura', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'dataOperacao', 'LogCultura.dataOperacao') INTO fix_command;
+
+    ELSE IF (charindex("LogInvestigador", fix_command) > 0)
+    THEN SELECT replace(fix_command, "dataOperacao", "LogInvestigador.dataOperacao") INTO fix_command;
+
+    ELSE IF (charindex("LogVariaveis", fix_command) > 0)
+    THEN SELECT replace(fix_command, "dataOperacao", "LogVariaveis.dataOperacao") INTO fix_command;
+
+    ELSE IF (charindex("LogMedicoes", fix_command) > 0)
+    THEN SELECT replace(fix_command, "dataOperacao", "LogMedicoes.dataOperacao") INTO fix_command;
+
+    ELSE IF (charindex("LogHumidadeTemperatura", fix_command) > 0)
+    THEN SELECT replace(fix_command, "dataOperacao", "LogHumidadeTemperatura.dataOperacao") INTO fix_command;
+    
+    END IF; END IF; END IF; END IF; END IF;
+
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
-    VALUES (fix_command, 1, CURRENT TIMESTAMP);
-END;
+    VALUES (fix_command, user_name(), CURRENT TIMESTAMP);
+
+END
 
 
 create procedure "DBA"."sp_softDeleteMedicoes"(IN arg_id INTEGER, IN arg_idCult INTEGER, IN arg_idVar INTEGER)

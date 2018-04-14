@@ -95,6 +95,7 @@ grant select on MedicoesPorInvestigador to "Investigadores";
 INVESTIGADORES
 */
 grant execute on SP_softDeleteMedicoes to "Investigadores";
+grant execute on sp_insLogSelects to "Investigadores";
 
 /*
 ADMINISTRADORES
@@ -104,6 +105,7 @@ grant execute on SP_softDeleteVariaveisMedidas to "Administradores";
 grant execute on SP_softDeletevariaveis to "Administradores";
 grant execute on SP_softDeleteCultura to "Administradores";
 grant execute on SP_softDeleteInvestigador to "Administradores";
+grant execute on sp_insLogSelects to "Administradores";
 
 /*
 grant execute on SP_CreateInvestigador to "Administradores";
@@ -129,4 +131,5 @@ grant execute on SP_softDeleteVariaveisMedidas to "SuperAdministrador";
 grant execute on SP_softDeletevariaveis to "SuperAdministrador";
 grant execute on SP_softDeleteCultura to "SuperAdministrador";
 grant execute on SP_softDeleteInvestigador to "SuperAdministrador";
+grant execute on sp_insLogSelects to "SuperAdministrador";
 
