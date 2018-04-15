@@ -47,6 +47,7 @@ grant select on DBA.log_investigadores to "Administrador";
 /*
 INVESTIGADORES
 */
+
 grant execute on deleteMedicoes to "Investigadores";
 grant execute on insertMedicoes to "Investigadores";
 grant execute on updateMedicoes to "Investigadores";
@@ -59,6 +60,7 @@ grant execute on consultMedicoes to "Investigadores";
 /*
 ADMINISTRADORES
 */
+
 grant execute on createVariavelMedida to "Administrador";
 
 grant execute on createInvestigador to "Administrador";
