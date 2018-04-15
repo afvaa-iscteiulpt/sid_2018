@@ -29,6 +29,7 @@ grant insert, delete, update on DBA.HumidadeTemperatura to "Administrador";
 grant select on DBA.Medicoes to "Administrador";
 grant select, insert, delete, update on DBA.Variaveis to "Administrador";
 grant select, insert, delete, update on DBA.VariaveisMedidas to "Administrador";
+grant select, insert, delete, update on DBA.Investigador to "Administrador";
 
 // LOGS
 grant select on DBA.log_variaveis to "Administrador";
