@@ -95,6 +95,7 @@ grant select on MedicoesPorInvestigador to "Investigadores";
 INVESTIGADORES
 */
 grant execute on SP_softDeleteMedicoes to "Investigadores";
+grant execute on sp_insLogSelects to "Investigadores";
 
 /*
 SUPERADMINISTRADOR
@@ -104,9 +105,6 @@ grant execute on SP_createAdministrador to "SuperAdministrador";
 grant execute on SP_alterAdministrador to "SuperAdministrador";
 grant execute on SP_dropAdministrador to "SuperAdministrador";
 
-
-// ALTERAR ORDEM
-
 /*
 ADMINISTRADORES
 */
@@ -115,11 +113,11 @@ grant execute on SP_softDeleteVariaveisMedidas to "Administradores";
 grant execute on SP_softDeletevariaveis to "Administradores";
 grant execute on SP_softDeleteCultura to "Administradores";
 grant execute on SP_softDeleteInvestigador to "Administradores";
+grant execute on sp_insLogSelects to "Administradores";
 
 grant execute on SP_createInvestigador to "SuperAdministrador";
 grant execute on SP_alterInvestigador to "SuperAdministrador";
 grant execute on SP_dropInvestigador to "SuperAdministrador";
-
 
 
 
