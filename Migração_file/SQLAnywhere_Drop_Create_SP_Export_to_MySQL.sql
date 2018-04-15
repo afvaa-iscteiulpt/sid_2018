@@ -1,32 +1,12 @@
-﻿drop procedure if exists "DBA"."Export_to_MySQL";
+drop procedure if exists "DBA"."Export_to_MySQL";
 
-create procedure "DBA"."Export_to_MySQL"
+CREATE PROCEDURE "DBA"."Export_to_MySQL" () 
 BEGIN
- 	SELECT * FROM Log_HumidadeTemperatura;
-	OUTPUT TO Log_HumidadeTemperatura.txt
-    	FORMAT TEXT;
-	
-	SELECT * FROM Log_VariaveisMedidas;
-	OUTPUT TO Log_VariaveisMedidas.txt
-    	FORMAT TEXT;
-	
-	SELECT * FROM Log_Variaveis;
-	OUTPUT TO Log_Variaveis.txt
-    	FORMAT TEXT;
-	
-	SELECT * FROM Log_Cultura;
-	OUTPUT TO Log_Cultura.txt
-    	FORMAT TEXT;
-
-	SELECT * FROM Log_Investigadores;
-	OUTPUT TO Log_Investigadores.txt
-    	FORMAT TEXT;
-
-	SELECT * FROM Log_Medicoes;
-	OUTPUT TO Log_Medicoes.txt
-    	FORMAT TEXT;
-
-	SELECT * FROM Log_Consultas;
-	OUTPUT TO Log_Consultas.txt
-    	FORMAT TEXT;
+ 	UNLOAD TABLE LOG_HUMIDADETEMPERATURA TO 'Z:\\VM_SHAREDFOLDER\\Log_HumidadeTemperatura.txt';
+	UNLOAD TABLE LOG_VARIAVEISMEDIDAS TO 'Z:\\VM_SHAREDFOLDER\\Log_VariaveisMedidas.txt';
+    UNLOAD TABLE LOG_VARIAVEIS TO 'Z:\\VM_SHAREDFOLDER\\Log_Variaveis.txt';
+    UNLOAD TABLE LOG_CULTURA TO 'Z:\\VM_SHAREDFOLDER\\Log_Cultura.txt';
+	UNLOAD TABLE LOG_INVESTIGADORES TO 'Z:\\VM_SHAREDFOLDER\\Log_Investigadores.txt';
+    UNLOAD TABLE LOG_MEDICOES TO 'Z:\\VM_SHAREDFOLDER\\Log_Medicoes.txt';
+    UNLOAD TABLE LOG_CONSULTAS TO 'Z:\\VM_SHAREDFOLDER\\Log_Consultas.txt';
 END;

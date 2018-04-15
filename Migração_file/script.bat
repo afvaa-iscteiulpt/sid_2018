@@ -10,19 +10,19 @@ rem //      2. ir aos serviços do windows e reiniciar o serviço MySQL Server 5.7
 
 @ECHO ON
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_Cultura.txt' IGNORE INTO TABLE Log_Cultura fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_Cultura.txt' IGNORE INTO TABLE Log_Cultura fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_HumidadeTemperatura.txt' IGNORE INTO TABLE Log_HumidadeTemperatura fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_HumidadeTemperatura.txt' IGNORE INTO TABLE Log_HumidadeTemperatura fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_Investigadores.txt' IGNORE INTO TABLE Log_Investigadores fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_Investigadores.txt' IGNORE INTO TABLE Log_Investigadores fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_Medicoes.txt' IGNORE INTO TABLE Log_Medicoes fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_Medicoes.txt' IGNORE INTO TABLE Log_Medicoes fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_Variaveis.txt' IGNORE INTO TABLE Log_Variaveis fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_Variaveis.txt' IGNORE INTO TABLE Log_Variaveis fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_VariaveisMedidas.txt' IGNORE INTO TABLE Log_VariaveisMedidas fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_VariaveisMedidas.txt' IGNORE INTO TABLE Log_VariaveisMedidas fields terminated by ','"
 
-"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA INFILE 'Z:/VM_SHAREDFOLDER/Log_Consultas.txt' IGNORE INTO TABLE Log_Consultas fields terminated by ','"
+"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -u root -h localhost basedados_auditor -e "LOAD DATA LOCAL INFILE 'Z:/VM_SHAREDFOLDER/Log_Consultas.txt' IGNORE INTO TABLE Log_Consultas fields terminated by ','"
 
 @ECHO OFF
 rem // Allow a key-press to abort the wait; `/T` can be omitted:
