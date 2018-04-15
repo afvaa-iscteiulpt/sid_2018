@@ -9,19 +9,19 @@ if exists(select 1 from sys.sysforeignkey where role='FK_CULTURA_INVESTIGA_INVES
        delete foreign key FK_CULTURA_INVESTIGA_INVESTIG
 end if;
 
-if exists(select 1 from sys.sysforeignkey where role='FK_MEDICOES_VARIAVEIS_VARIVEIS') then
+if exists(select 1 from sys.sysforeignkey where role='FK_MEDICOES_VARIAVEIS_VARIAVEIS') then
     alter table MEDICOES
-       delete foreign key FK_MEDICOES_VARIAVEIS_VARIVEIS
+       delete foreign key FK_MEDICOES_VARIAVEIS_VARIAVEIS
 end if;
 
-if exists(select 1 from sys.sysforeignkey where role='FK_VARIVEIS_CULTURA_CULTURA') then
-    alter table VARIVEISMEDIDAS
-       delete foreign key FK_VARIVEIS_CULTURA_CULTURA
+if exists(select 1 from sys.sysforeignkey where role='FK_VARIAVEIS_CULTURA_CULTURA') then
+    alter table VARIAVEISMEDIDAS
+       delete foreign key FK_VARIAVEIS_CULTURA_CULTURA
 end if;
 
-if exists(select 1 from sys.sysforeignkey where role='FK_VARIVEIS_VARIAVEIS_VARIAVEI') then
-    alter table VARIVEISMEDIDAS
-       delete foreign key FK_VARIVEIS_VARIAVEIS_VARIAVEI
+if exists(select 1 from sys.sysforeignkey where role='FK_VARIAVEIS_VARIAVEIS_VARIAVEI') then
+    alter table VARIAVEISMEDIDAS
+       delete foreign key FK_VARIAVEIS_VARIAVEIS_VARIAVEI
 end if;
 
 drop index if exists CULTURA.INVESTIGADOR_FK;
@@ -146,13 +146,13 @@ drop index if exists VARIAVEIS.VARIAVEIS_PK;
 
 drop table if exists VARIAVEIS;
 
-drop index if exists VARIVEISMEDIDAS.CULTURA_FK;
+drop index if exists VARIAVEISMEDIDAS.CULTURA_FK;
 
-drop index if exists VARIVEISMEDIDAS.VARIAVEIS_FK;
+drop index if exists VARIAVEISMEDIDAS.VARIAVEIS_FK;
 
-drop index if exists VARIVEISMEDIDAS.VARIVEISMEDIDAS_PK;
+drop index if exists VARIAVEISMEDIDAS.VARIAVEISMEDIDAS_PK;
 
-drop table if exists VARIVEISMEDIDAS;
+drop table if exists VARIAVEISMEDIDAS;
 
 if exists(select 1 from sys.syssequence s
    where sequence_name='S_CULTURA') then
@@ -519,21 +519,21 @@ IDVARIAVEL ASC
 );
 
 /*==============================================================*/
-/* Table: VARIVEISMEDIDAS                                       */
+/* Table: VARIAVEISMEDIDAS                                       */
 /*==============================================================*/
-create table VARIVEISMEDIDAS 
+create table VARIAVEISMEDIDAS 
 (
    LIMITEINFERIOR       decimal(8,2)                   not null,
    LIMITESUPERIOR       decimal(8,2)                   not null,
    IDCULTURA            integer                        not null,
    IDVARIAVEL           integer                        not null,
-   constraint PK_VARIVEISMEDIDAS primary key (IDCULTURA, IDVARIAVEL)
+   constraint PK_VARIAVEISMEDIDAS primary key (IDCULTURA, IDVARIAVEL)
 );
 
 /*==============================================================*/
-/* Index: VARIVEISMEDIDAS_PK                                    */
+/* Index: VARIAVEISMEDIDAS_PK                                    */
 /*==============================================================*/
-create unique index VARIVEISMEDIDAS_PK on VARIVEISMEDIDAS (
+create unique index VARIAVEISMEDIDAS_PK on VARIAVEISMEDIDAS (
 IDCULTURA ASC,
 IDVARIAVEL ASC
 );
@@ -541,14 +541,14 @@ IDVARIAVEL ASC
 /*==============================================================*/
 /* Index: VARIAVEIS_FK                                          */
 /*==============================================================*/
-create index VARIAVEIS_FK on VARIVEISMEDIDAS (
+create index VARIAVEIS_FK on VARIAVEISMEDIDAS (
 IDVARIAVEL ASC
 );
 
 /*==============================================================*/
 /* Index: CULTURA_FK                                            */
 /*==============================================================*/
-create index CULTURA_FK on VARIVEISMEDIDAS (
+create index CULTURA_FK on VARIAVEISMEDIDAS (
 IDCULTURA ASC
 );
 
@@ -559,19 +559,19 @@ alter table CULTURA
       on delete set null;
 
 alter table MEDICOES
-   add constraint FK_MEDICOES_VARIAVEIS_VARIVEIS foreign key (IDCULTURA, IDVARIAVEL)
-      references VARIVEISMEDIDAS (IDCULTURA, IDVARIAVEL)
+   add constraint FK_MEDICOES_VARIAVEIS_VARIAVEIS foreign key (IDCULTURA, IDVARIAVEL)
+      references VARIAVEISMEDIDAS (IDCULTURA, IDVARIAVEL)
       on update cascade
       on delete cascade;
 
-alter table VARIVEISMEDIDAS
-   add constraint FK_VARIVEIS_CULTURA_CULTURA foreign key (IDCULTURA)
+alter table VARIAVEISMEDIDAS
+   add constraint FK_VARIAVEIS_CULTURA_CULTURA foreign key (IDCULTURA)
       references CULTURA (IDCULTURA)
       on update cascade
       on delete cascade;
 
-alter table VARIVEISMEDIDAS
-   add constraint FK_VARIVEIS_VARIAVEIS_VARIAVEI foreign key (IDVARIAVEL)
+alter table VARIAVEISMEDIDAS
+   add constraint FK_VARIAVEIS_VARIAVEIS_VARIAVEI foreign key (IDVARIAVEL)
       references VARIAVEIS (IDVARIAVEL)
       on update cascade
       on delete cascade;
