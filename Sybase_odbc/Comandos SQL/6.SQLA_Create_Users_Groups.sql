@@ -36,8 +36,8 @@ SUPERADMINISTRADOR
 if not exists (select * FROM dbo.sysusers where dbo.sysusers.name = 'SuperAdministrador')
 create user "SuperAdministrador" identified by "password";
 revoke all from "SuperAdministrador";
-// Está neste momento como utilizador separado, copiando os grants para os administradores
-//grant membership in group "Administradores" to "SuperAdministrador";
+revoke membership in group "Administradores" from "SuperAdministrador";
+grant membership in group "Administradores" to "SuperAdministrador";
 
 /*==============================================================*/
 /* Grant Table Permissions                 						*/
@@ -97,6 +97,17 @@ INVESTIGADORES
 grant execute on SP_softDeleteMedicoes to "Investigadores";
 
 /*
+SUPERADMINISTRADOR
+*/
+
+grant execute on SP_createAdministrador to "SuperAdministrador";
+grant execute on SP_alterAdministrador to "SuperAdministrador";
+grant execute on SP_dropAdministrador to "SuperAdministrador";
+
+
+// ALTERAR ORDEM
+
+/*
 ADMINISTRADORES
 */
 grant execute on SP_softDeleteMedicoes to "Administradores";
@@ -105,28 +116,11 @@ grant execute on SP_softDeletevariaveis to "Administradores";
 grant execute on SP_softDeleteCultura to "Administradores";
 grant execute on SP_softDeleteInvestigador to "Administradores";
 
-/*
-grant execute on SP_CreateInvestigador to "Administradores";
-grant execute on SP_AlterInvestigador to "Administradores";
-grant execute on SP_DropInvestigador to "Administradores";
-*/
+grant execute on SP_createInvestigador to "SuperAdministrador";
+grant execute on SP_alterInvestigador to "SuperAdministrador";
+grant execute on SP_dropInvestigador to "SuperAdministrador";
 
-/*
-SUPERADMINISTRADOR
-*/
-/*
-grant execute on SP_CreateInvestigador to "SuperAdministrador";
-grant execute on SP_AlterInvestigador to "SuperAdministrador";
-grant execute on SP_DropInvestigador to "SuperAdministrador";
 
-grant execute on SP_CreateAdministrador to "SuperAdministrador";
-grant execute on SP_AlterAdministrador to "SuperAdministrador";
-grant execute on SP_DropAdministrador to "SuperAdministrador";
-*/
 
-grant execute on SP_softDeleteMedicoes to "SuperAdministrador";
-grant execute on SP_softDeleteVariaveisMedidas to "SuperAdministrador";
-grant execute on SP_softDeletevariaveis to "SuperAdministrador";
-grant execute on SP_softDeleteCultura to "SuperAdministrador";
-grant execute on SP_softDeleteInvestigador to "SuperAdministrador";
+
 
