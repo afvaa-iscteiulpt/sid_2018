@@ -335,9 +335,9 @@ create table LOG_CULTURA
    LIMITEINFERIORHUMIDADE integer                        null,
    LIMITESUPERIORHUMIDADE integer                        null,
    EMAILINVESTIGADOR    varchar(50)                    null,
-   COLUNAALTERADA       char(100)                      null,
-   VALOR_ANTERIOR       char(100)                      null,
-   VALOR_POSTERIOR      char(100)                      null,
+   COLUNAALTERADA       char(200)                      null,
+   VALOR_ANTERIOR       char(200)                      null,
+   VALOR_POSTERIOR      char(200)                      null,
    constraint PK_LOG_CULTURA primary key (IDLOG)
 );
 
