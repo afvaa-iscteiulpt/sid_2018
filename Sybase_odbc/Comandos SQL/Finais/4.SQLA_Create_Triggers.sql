@@ -135,20 +135,6 @@ begin
                             now() );
 end;
 
-/*
-create trigger tr_after_ins_HumidadeTemp after insert order 1 on HumidadeTemperatura
-referencing new as new_ins for each row
-begin 
-    INSERT INTO LogHumidadeTemperatura (dataHoraMedicao,
-                                        valorMedicaoTemperatura,
-                                        valorMedicaoHumidade,
-                                        idMedicao)
-            VALUES                      (new_ins.dataHoraMedicao,
-                                         new_ins.valorMedicaoTemperatura,
-                                         new_ins.valorMedicaoHumidade,
-                                         new_ins.idMedicao);
-end;
-*/
 
 create trigger tr_after_del_Investigador after delete order 1 on Investigador
 referencing old as old_del for each row
@@ -216,87 +202,6 @@ begin
                                  now());
 end;
 
-/*
-create trigger tr_before_Ins_Investigador before insert order 1 on Investigador
-referencing new as new_ins for each row
-begin
-    declare user_defined_exception exception for SQLSTATE '99999';
-    declare found integer;
-    declare utilizador varchar(50);
-    set utilizador = new_ins.email;
-
-    IF EXISTS (SELECT * FROM sysusers where sysusers.name = new_ins.email) THEN
-	DROP USER utilizador
-    END IF;
-    CREATE USER utilizador IDENTIFIED BY 'senha';
-    IF EXISTS (SELECT * FROM sysusers where sysusers.name = 'Investigadores') THEN
-        GRANT MEMBERSHIP IN GROUP Investigadores TO utilizador
-    ELSE
-	begin 			
-        	set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
-        	RAISERROR 99999 user_defined_exception;
-        	rollback;
-	end
-    END IF;
-end;
-
-
-create trigger tr_before_del_Investigador before delete order 1 on Investigador
-referencing old as old_del for each row
-begin
-    declare user_defined_exception exception for SQLSTATE '99999';
-    declare found integer;
-    declare utilizador varchar(50);
-    set utilizador = old_del.email;
-         
-    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_del.email) THEN
-        DROP USER utilizador
-    END IF;
- end;
-
-
-create trigger tr_before_upd_Investigador before update of idInvestigador
-order 1 on Investigador
-referencing new as new_upd old as old_upd for each row
-begin
-    declare user_defined_exception exception for SQLSTATE '99999';
-    declare found integer;
-
-    declare old_utilizador varchar(50);
-    declare new_utilizador varchar(50);
-    set old_utilizador = old_upd.email;
-    set new_utilizador = new_upd.email;
-
-   IF EXISTS ( SELECT * FROM dbo.sysusers where dbo.sysusers.name = old_upd.email ) THEN
-	BEGIN
-          IF ( ( new_upd.deleted = true ) OR ( old_upd.email <> new_upd.email ) ) THEN
-		BEGIN
-            		-- Investigador "soft deleted" ou "anonimizado", ou com email alterado
-             		DROP USER old_utilizador;
-		END
-          END IF;
---
-          IF ( old_utilizador <> new_utilizador ) THEN
-                  IF ( ( new_utilizador <> '') AND (new_utilizador is not null) ) THEN
-			BEGIN
-                        	CREATE USER new_utilizador IDENTIFIED BY 'senha';
-                        	IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Investigadores') THEN
-                               		GRANT MEMBERSHIP IN GROUP Investigadores TO new_utilizador;
-                        	ELSE
-			    		BEGIN 
-        					set user_defined_exception = 'Não existe grupo defnido pars Investigadores';
-        					RAISERROR 99999 user_defined_exception;
-        					rollback;
-			    		END
-                         	END IF
-			END
-                  END IF
-          END IF
---
-	END
-   END IF;
-end;
-*/
 
 create trigger tr_after_del_Medicoes after delete order 1 on Medicoes
 referencing old as old_del for each row
