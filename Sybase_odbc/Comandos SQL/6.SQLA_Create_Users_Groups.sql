@@ -3,11 +3,6 @@
 /*==============================================================*/
 
 /*
-OBSERVAÇÕES GERAIS
-Os SPs create/alter/delete users e admins estão comentados porque não estão implementados ainda
-*/
-
-/*
 INVESTIGADORES
 */
 if not exists (select * from dbo.sysusers where dbo.sysusers.name = 'Investigadores')

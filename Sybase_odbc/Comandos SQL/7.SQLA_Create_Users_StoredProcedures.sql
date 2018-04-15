@@ -51,3 +51,32 @@ BEGIN
   END IF;
 END;
 
+/*
+CREATE ADMINISTRADOR
+*/
+DROP PROCEDURE IF EXISTS sp_createAdministrador;
+
+CREATE PROCEDURE sp_createAdministrador(IN username VARCHAR(50) DEFAULT '', IN pass VARCHAR(50) DEFAULT '')
+BEGIN
+    IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = username) THEN
+  	EXECUTE IMMEDIATE 'DROP USER '  || username
+  END IF;
+  EXECUTE IMMEDIATE 'CREATE USER '  || username || ' IDENTIFIED BY ' ||  pass;
+  IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Administradores' ) THEN
+       EXECUTE IMMEDIATE 'GRANT MEMBERSHIP IN GROUP Administradores TO ' || username
+  END IF;
+END;
+
+
+/*
+DROP ADMINISTRADOR
+*/
+DROP PROCEDURE IF EXISTS sp_dropAdministrador;
+CREATE PROCEDURE sp_dropAdministrador (username VARCHAR(50) DEFAULT '')
+BEGIN 
+  IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = username) THEN
+    EXECUTE IMMEDIATE 'DROP USER ' || username;
+  END IF;
+
+END;
+
