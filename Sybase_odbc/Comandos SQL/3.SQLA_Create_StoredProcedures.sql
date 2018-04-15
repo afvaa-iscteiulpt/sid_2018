@@ -17,19 +17,49 @@ create procedure "DBA"."sp_insLogSelects"(
 /* RESULT( column_name column_type, ... ) */
 BEGIN
 	DECLARE fix_command VARCHAR(500);
-
-    EXECUTE (arg_command);
     
+    EXECUTE IMMEDIATE WITH RESULT SET ON arg_command;
+
+    /* Substituição das views pelas tabelas LOG */
     SELECT (
-        'SELECT (' + replace(replace(replace(replace(replace(arg_command, 
+        replace(replace(replace(replace(replace(arg_command, 
             'DBA.CulturaPorInvestigador', 'LogCultura'),
             'DBA.InvestigadorPorInvestigador', 'LogInvestigador'),
             'DBA.VariaveisPorInvestigador', 'LogVariaveis'), 
             'DBA.MedicoesPorInvestigador', 'LogMedicoes'),
-			'DBA.HumidadeTemperatura', 'LogHumidadeTemperatura') 
-	    + ') WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) 
+			'DBA.HumidadeTemperatura', 'LogHumidadeTemperatura'))
     INTO fix_command;
 
+    /* Aplicação do fator data de operação anterior */
+    IF (charindex('WHERE', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'WHERE ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' AND ')
+    INTO fix_command;
+
+    ELSE IF (charindex('ORDER BY', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'ORDER BY ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' ORDER BY ')
+    INTO fix_command;
+
+    ELSE IF (charindex('INNER JOIN', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'INNER JOIN ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' INNER JOIN ')
+    INTO fix_command;
+
+    ELSE IF (charindex('LEFT JOIN', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'LEFT JOIN ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' LEFT JOIN ')
+    INTO fix_command;
+
+    ELSE IF (charindex('RIGHT JOIN', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'RIGHT JOIN ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' RIGHT JOIN ')
+    INTO fix_command;
+
+    ELSE IF (charindex('JOIN', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'JOIN ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' JOIN ')
+    INTO fix_command;
+
+    ELSE SELECT (fix_command + ' WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD')) INTO fix_command;
+    
+    END IF; END IF; END IF; END IF; END IF; END IF;
+   
+    /* Adaptação da data de operação à tabela existente */
 	IF (charindex('LogCultura', fix_command) > 0)
     THEN SELECT replace(fix_command, 'dataOperacao', 'LogCultura.dataOperacao') INTO fix_command;
 
@@ -47,6 +77,7 @@ BEGIN
     
     END IF; END IF; END IF; END IF; END IF;
 
+    /* Inserção do comando na tabela logSelect */
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
     VALUES (fix_command, user_name(), CURRENT TIMESTAMP);
 
