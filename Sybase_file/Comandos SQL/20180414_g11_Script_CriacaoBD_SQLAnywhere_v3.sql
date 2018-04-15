@@ -266,7 +266,7 @@ EMAILINVESTIGADOR ASC
 create table HUMIDADETEMPERATURA 
 (
    IDMEDICAO            integer                        not null default autoincrement,
-   DATAMEDICAO          date                           not null,
+   DATAMEDICAO          timestamp                           not null,
    HORAMEDICAO          time                           not null,
    VALORMEDICAOTEMPERATURA decimal(8,2)                   null,
    VALORMEDICAOHUMIDADE decimal(8,2)                   null,
@@ -478,7 +478,7 @@ IDLOG ASC
 create table MEDICOES 
 (
    NUMEROMEDICAO        integer                        not null default autoincrement,
-   DATAMEDICAO          date                           not null,
+   DATAMEDICAO          timestamp                           not null,
    HORAMEDICAO          time                           not null,
    VALORMEDICAO         decimal(8,2)                   not null,
    IDVARIAVEL           integer                        not null,
