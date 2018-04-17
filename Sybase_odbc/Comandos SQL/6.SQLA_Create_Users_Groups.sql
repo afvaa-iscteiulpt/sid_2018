@@ -97,7 +97,6 @@ SUPERADMINISTRADOR
 */
 
 grant execute on SP_createAdministrador to "SuperAdministrador";
-grant execute on SP_alterAdministrador to "SuperAdministrador";
 grant execute on SP_dropAdministrador to "SuperAdministrador";
 
 /*
