@@ -17,8 +17,6 @@ create procedure "DBA"."sp_insLogSelects"(
 /* RESULT( column_name column_type, ... ) */
 BEGIN
 	DECLARE fix_command VARCHAR(500);
-    
-    EXECUTE IMMEDIATE WITH RESULT SET ON arg_command;
 
     /* Substituição das views pelas tabelas LOG */
     SELECT (
@@ -28,6 +26,22 @@ BEGIN
             'DBA.VariaveisPorInvestigador', 'LogVariaveis'), 
             'DBA.MedicoesPorInvestigador', 'LogMedicoes'),
 			'DBA.HumidadeTemperatura', 'LogHumidadeTemperatura'))
+    INTO fix_command;
+	
+	/* Substituição das tabelas pelas tabelas LOG */
+    SELECT (
+        replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(fix_command, 
+            ' Cultura ', ' LogCultura '),
+			' Cultura,', ' LogCultura,'),
+			',Cultura ', ',LogCultura '),
+			',Cultura,', ',LogCultura,'),
+            ' Investigador ', ' LogInvestigador '),
+			' Investigador,', ' LogInvestigador,'),
+			',Investigador ', ',LogInvestigador '),
+			',Investigador,', ',LogInvestigador,'),
+            'Variaveis', 'LogVariaveis'), 
+            'Medicoes', 'LogMedicoes'),
+			'DBA.', ''))
     INTO fix_command;
 
     /* Aplicação do fator data de operação anterior */
@@ -80,7 +94,8 @@ BEGIN
     /* Inserção do comando na tabela logSelect */
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
     VALUES (fix_command, user_name(), CURRENT TIMESTAMP);
-
+	
+	EXECUTE IMMEDIATE WITH RESULT SET ON arg_command;
 END;
 
 
