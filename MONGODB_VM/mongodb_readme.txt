@@ -6,6 +6,11 @@ https://pplware.sapo.pt/tutoriais/mongodb-instalar-e-configurar-a-bd-nosql-no-wi
 https://pplware.sapo.pt/tutoriais/mongodb-manipular-base-dados-nosql-no-windows-10-p2/
 
 -----
+NA VM:
+desligar o no-ip
+
+-----
+
 
 para simular o que é suposto: 
 através do https://eclipse.org/paho/clients/js/utility/ envia-se dados (publish) para o topico (adicionado na barra de favoritos no chrome na VM)
