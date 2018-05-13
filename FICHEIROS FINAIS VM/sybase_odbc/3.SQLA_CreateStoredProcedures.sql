@@ -16,9 +16,14 @@ create procedure "DBA"."sp_insLogSelects"(
 )
 /* RESULT( column_name column_type, ... ) */
 BEGIN
-	DECLARE fix_command VARCHAR(500);
+	DECLARE fix_command_temp VARCHAR(500);
+    DECLARE fix_command VARCHAR(500);
+    DECLARE isAdmin SMALLINT;
+    DECLARE utilizadorLigado VARCHAR(50);
 
-    /* Substituição das views pelas tabelas LOG */
+    SET isAdmin = 0;
+
+    /* Substitui§o das views pelas tabelas LOG */
     SELECT (
         replace(replace(replace(replace(replace(arg_command, 
             'DBA.CulturaPorInvestigador', 'LogCultura'),
@@ -27,24 +32,27 @@ BEGIN
             'DBA.MedicoesPorInvestigador', 'LogMedicoes'),
 			'DBA.HumidadeTemperatura', 'LogHumidadeTemperatura'))
     INTO fix_command;
+
+    SET fix_command_temp = fix_command;
 	
-	/* Substituição das tabelas pelas tabelas LOG */
+	/* Substitui§o das tabelas pelas tabelas LOG */
     SELECT (
-        replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(fix_command, 
-            ' Cultura ', ' LogCultura '),
-			' Cultura,', ' LogCultura,'),
-			',Cultura ', ',LogCultura '),
-			',Cultura,', ',LogCultura,'),
-            ' Investigador ', ' LogInvestigador '),
-			' Investigador,', ' LogInvestigador,'),
-			',Investigador ', ',LogInvestigador '),
-			',Investigador,', ',LogInvestigador,'),
+        replace(replace(replace(replace(replace(replace(replace(fix_command, 
+            ' Cultura', ' LogCultura'),
+			',Cultura', ',LogCultura '),
+            ' Investigador', ' LogInvestigador'),
+			',Investigador', ',LogInvestigador'),
             'Variaveis', 'LogVariaveis'), 
             'Medicoes', 'LogMedicoes'),
 			'DBA.', ''))
     INTO fix_command;
 
-    /* Aplicação do fator data de operação anterior */
+    IF (fix_command = fix_command_temp)
+    THEN SELECT 0 INTO isAdmin
+    ELSE SELECT 1 INTO isAdmin
+    ENDIF;
+
+    /* Aplica§o do fator data de opera§o anterior */
     IF (charindex('WHERE', fix_command) > 0)
     THEN SELECT replace(fix_command, 'WHERE ', 'WHERE dataOperacao <= ' + dateformat(CURRENT TIMESTAMP, 'YYYY-MM-DD') + ' AND ')
     INTO fix_command;
@@ -73,29 +81,37 @@ BEGIN
     
     END IF; END IF; END IF; END IF; END IF; END IF;
    
-    /* Adaptação da data de operação à tabela existente */
+    /* Adapta§o da data de opera§o   tabela existente */
 	IF (charindex('LogCultura', fix_command) > 0)
     THEN SELECT replace(fix_command, 'dataOperacao', 'LogCultura.dataOperacao') INTO fix_command;
 
-    ELSE IF (charindex("LogInvestigador", fix_command) > 0)
-    THEN SELECT replace(fix_command, "dataOperacao", "LogInvestigador.dataOperacao") INTO fix_command;
+    ELSE IF (charindex('LogInvestigador', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'dataOperacao', 'LogInvestigador.dataOperacao') INTO fix_command;
 
-    ELSE IF (charindex("LogVariaveis", fix_command) > 0)
-    THEN SELECT replace(fix_command, "dataOperacao", "LogVariaveis.dataOperacao") INTO fix_command;
+    ELSE IF (charindex('LogVariaveis', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'dataOperacao', 'LogVariaveis.dataOperacao') INTO fix_command;
 
-    ELSE IF (charindex("LogMedicoes", fix_command) > 0)
-    THEN SELECT replace(fix_command, "dataOperacao", "LogMedicoes.dataOperacao") INTO fix_command;
+    ELSE IF (charindex('LogMedicoes', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'dataOperacao', 'LogMedicoes.dataOperacao') INTO fix_command;
 
-    ELSE IF (charindex("LogHumidadeTemperatura", fix_command) > 0)
-    THEN SELECT replace(fix_command, "dataOperacao", "LogHumidadeTemperatura.dataOperacao") INTO fix_command;
+    ELSE IF (charindex('LogHumidadeTemperatura', fix_command) > 0)
+    THEN SELECT replace(fix_command, 'dataOperacao', 'LogHumidadeTemperatura.dataOperacao') INTO fix_command;
     
     END IF; END IF; END IF; END IF; END IF;
 
-    /* Inserção do comando na tabela logSelect */
+    /* Inser§o do comando na tabela logSelect */
     INSERT INTO LogSelect (comandoSelect, utilizador, dataOperacao)
     VALUES (fix_command, user_name(), CURRENT TIMESTAMP);
 	
-	EXECUTE IMMEDIATE WITH RESULT SET ON arg_command;
+    /* Verifica se é um admin ou investigador e permite o execute */
+    SELECT FIRST Investigador.email INTO utilizadorLigado FROM Investigador
+	WHERE Investigador.email = user_name();
+	
+    IF utilizadorLigado IS NOT NULL AND isAdmin = 1 THEN 
+        RAISERROR 23000 'Nao tem permissao para efetuar o comando'
+    ELSE
+        EXECUTE IMMEDIATE WITH RESULT SET ON arg_command;
+    END IF;
 END;
 
 
