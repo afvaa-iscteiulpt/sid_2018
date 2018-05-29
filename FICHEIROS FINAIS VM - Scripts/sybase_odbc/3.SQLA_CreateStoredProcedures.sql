@@ -158,3 +158,87 @@ BEGIN
     SET deleted = 1
     WHERE idVariavel = arg_idVar AND idCultura = arg_idCul
 END;
+
+
+CREATE PROCEDURE "DBA"."sp_NoDataAlert"(IN medicao INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+	DECLARE valorTemp DECIMAL(8,2);
+    DECLARE valorHumi DECIMAL(8,2);
+    DECLARE lastAlert INTEGER;
+
+    SELECT valorMedicaoTemperatura INTO valorTemp FROM HumidadeTemperatura WHERE idMedicao = medicao; 
+    SELECT valorMedicaoHumidade INTO valorHumi FROM HumidadeTemperatura WHERE idMedicao = medicao;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoHumidade = NULL AND valorMedicaoTemperatura = NULL;
+
+    IF valorTemp = NULL AND valorHumi = NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoDataAlert', NULL, now(), NULL);
+        RETURN 3;
+    ENDIF;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoTemperatura = NULL;
+
+    IF valorTemp = NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoTempAlert', NULL, now(), NULL);
+        RETURN 1;
+    ENDIF;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoHumidade = NULL;
+
+    IF valorHumi = NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoHumiAlert', NULL, now(), NULL);
+        RETURN 2;
+    ENDIF;
+
+    RETURN 0;
+END
+
+
+CREATE PROCEDURE "DBA"."sp_ReadErrorAlert"(IN medicao INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+	DECLARE valorTempNow DECIMAL(8,2);
+    DECLARE valorTempBefore DECIMAL(8,2);
+    DECLARE valorHumiNow DECIMAL(8,2);
+    DECLARE valorHumiBefore DECIMAL(8,2);
+
+    SELECT valorMedicaoTemperatura INTO valorTempNow FROM HumidadeTemperatura WHERE idMedicao = medicao;
+    SELECT valorMedicaoTemperatura INTO valorTempBefore FROM HumidadeTemperatura WHERE idMedicao = medicao - 1; 
+    SELECT valorMedicaoHumidade INTO valorHumiNow FROM HumidadeTemperatura WHERE idMedicao = medicao;
+    SELECT valorMedicaoHumidade INTO valorHumiBefore FROM HumidadeTemperatura WHERE idMedicao = medicao - 1;
+
+    IF abs(valorTempNow - valorTempBefore) >= 20 AND abs(valorHumiNow - valorHumiBefore) >= 20
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadTempErrorAlert', NULL, now(), NULL);
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadHumiErrorAlert', NULL, now(), NULL);
+        RETURN 3;
+    ENDIF;
+
+    IF abs(valorTempNow - valorTempBefore) >= 20
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadTempErrorAlert', NULL, now(), NULL);
+        RETURN 1;
+    ENDIF;
+
+    IF abs(valorTempNow - valorTempBefore) >= 20 AND abs(valorHumiNow - valorHumiBefore) >= 20
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadHumiErrorAlert', NULL, now(), NULL);
+        RETURN 2;
+    ENDIF;
+
+    RETURN 0;
+END

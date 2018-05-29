@@ -722,3 +722,28 @@ UPDATE RESTRICT
 	ON
 
 DELETE RESTRICT;
+
+/*==============================================================*/
+/* Table: AlertasHumidadeTemperatura                                      */
+/*==============================================================*/
+
+CREATE TABLE AlertasHumidadeTemperatura (
+	idAlerta INT NOT NULL DEFAULT autoincrement,
+	tipoAlerta VARCHAR(20) NOT NULL,
+	idCultura INT,
+	dataHora TIMESTAMP NOT NULL,
+	valorReg DECIMAL(8,2)
+	);
+
+/*==============================================================*/
+/* Index: PK_ALERTAS		                                    */
+/*==============================================================*/
+CREATE UNIQUE INDEX PK_ALERTAS ON AlertasHumidadeTemperatura (idCultura ASC);
+
+/*==============================================================*/
+/* Index: FK_CULTURA_ALERTAS                                    */
+/*==============================================================*/
+	
+ALTER TABLE AlertasHumidadeTemperatura ADD CONSTRAINT FK_CULTURA_ALERTAS FOREIGN KEY ( 
+	idCultura) 
+REFERENCES Cultura ( idCultura ) ON UPDATE CASCADE ON DELETE CASCADE;
