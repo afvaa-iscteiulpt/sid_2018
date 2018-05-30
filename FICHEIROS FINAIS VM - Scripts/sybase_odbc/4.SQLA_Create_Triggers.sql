@@ -431,3 +431,26 @@ begin
 	
 END;
 
+
+CREATE TRIGGER "tr_beforeInsAlertas" BEFORE INSERT
+ORDER 1 ON AlertasHumidadeTemperatura
+REFERENCING NEW AS new_name
+FOR EACH ROW
+BEGIN
+    IF new_name.idCultura IS NULL 
+    THEN
+	    IF EXISTS(
+            SELECT idAlerta FROM AlertasHumidadeTemperatura 
+            WHERE tipoAlerta = new_name.tipoAlerta AND dataHora > dateadd(mi,-2,now())) 
+        THEN ROLLBACK TRIGGER 
+        ENDIF;
+    ENDIF;
+
+    IF EXISTS(
+        SELECT idAlerta FROM AlertasHumidadeTemperatura
+        WHERE tipoAlerta = new_name.tipoAlerta AND dataHora > dateadd(mi,-2,now())
+        AND idCultura = new_name.idCultura)
+    THEN ROLLBACK TRIGGER 
+    ENDIF
+END
+
