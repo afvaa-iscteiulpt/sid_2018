@@ -1,0 +1,19 @@
+MongoDB version:		3.6.4
+MongoDB Compass version:	1.13.1
+
+Cluster Name:	SID23cluster
+Cloud Provider:	aws
+Region:		Frankfurt (eu-central-1)
+Cluster Tier:	M0 (Shared Clusters - Sandbox instances for getting started with MongoDB, such as the M0 Free Tier instance, has 512MB of storage.
+		These instances support replica set deployments in a shared environment with access to a subset of Atlas features and functionality.)
+Sharding:	No sharding available for free replica set's (sharding is dividing data through different servers in the cluster)
+Backup:		No backup available for free replica set's (If enabled, Atlas takes snapshots of your databases at regular intervals and retains them according to your project’s retention policy)
+Maximum Number of Concurrent Incoming Connections:	100
+White list of IP's:	Allow access from anywhere (we could hand pick the IP addresses allowed to connect to our cluster, but decided to allow everyone for the sake of simplicity)
+
+######USER's#######
+Administrator name:	admin
+Administrator pass:	pass
+
+User1 name:		user1
+User1 pass:		user1

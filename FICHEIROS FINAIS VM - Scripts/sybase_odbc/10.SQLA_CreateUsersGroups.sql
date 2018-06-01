@@ -80,6 +80,7 @@ grant select on CulturaPorInvestigador to "Investigadores";
 grant select on VariaveisPorInvestigador to "Investigadores";
 grant select on VariaveisMedidasPorInvestigador to "Investigadores";
 grant select on MedicoesPorInvestigador to "Investigadores";
+grant select on AlertasPorInvestigador to "Investigadores";
 
 
 /*==============================================================*/

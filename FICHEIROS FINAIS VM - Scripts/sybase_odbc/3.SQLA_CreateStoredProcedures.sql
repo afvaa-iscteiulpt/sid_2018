@@ -158,3 +158,204 @@ BEGIN
     SET deleted = 1
     WHERE idVariavel = arg_idVar AND idCultura = arg_idCul
 END;
+
+
+CREATE PROCEDURE "DBA"."sp_NoDataAlert"(IN medicao INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+	DECLARE valorTemp DECIMAL(8,2);
+    DECLARE valorHumi DECIMAL(8,2);
+    DECLARE lastAlert INTEGER;
+
+    SELECT valorMedicaoTemperatura INTO valorTemp FROM HumidadeTemperatura WHERE idMedicao = medicao; 
+    SELECT valorMedicaoHumidade INTO valorHumi FROM HumidadeTemperatura WHERE idMedicao = medicao;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoHumidade = NULL AND valorMedicaoTemperatura = NULL;
+
+    IF valorTemp IS NULL AND valorHumi IS NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoDataAlert', NULL, now(), NULL);
+        RETURN 3;
+    ENDIF;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoTemperatura = NULL;
+
+    IF valorTemp IS NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoTempAlert', NULL, now(), NULL);
+        RETURN 1;
+    ENDIF;
+
+    SELECT count(idMedicao) INTO lastAlert FROM HumidadeTemperatura 
+    WHERE idMedicao > medicao - 12 AND valorMedicaoHumidade = NULL;
+
+    IF valorHumi IS NULL AND lastAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('NoHumiAlert', NULL, now(), NULL);
+        RETURN 2;
+    ENDIF;
+
+    RETURN 0;
+END;
+
+
+CREATE PROCEDURE "DBA"."sp_ReadErrorAlert"(IN medicao INTEGER, IN noDataAlert INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+	DECLARE valorTempNow DECIMAL(8,2);
+    DECLARE valorTempBefore DECIMAL(8,2);
+    DECLARE valorHumiNow DECIMAL(8,2);
+    DECLARE valorHumiBefore DECIMAL(8,2);
+
+    SELECT valorMedicaoTemperatura INTO valorTempNow FROM HumidadeTemperatura WHERE idMedicao = medicao;
+    SELECT valorMedicaoTemperatura INTO valorTempBefore FROM HumidadeTemperatura WHERE idMedicao = medicao - 1; 
+    SELECT valorMedicaoHumidade INTO valorHumiNow FROM HumidadeTemperatura WHERE idMedicao = medicao;
+    SELECT valorMedicaoHumidade INTO valorHumiBefore FROM HumidadeTemperatura WHERE idMedicao = medicao - 1;
+
+    IF abs(valorTempNow - valorTempBefore) >= 20 AND abs(valorHumiNow - valorHumiBefore) >= 20 AND noDataAlert = 0
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadTempErrorAlert', NULL, now(), valorTempNow);
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadHumiErrorAlert', NULL, now(), valorHumiNow);
+        RETURN 3;
+    ENDIF;
+
+    IF abs(valorTempNow - valorTempBefore) >= 20 AND noDataAlert <> 1 AND noDataAlert <> 3
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadTempErrorAlert', NULL, now(), valorTempNow);
+        RETURN 1;
+    ENDIF;
+
+    IF abs(valorHumiNow - valorHumiBefore) >= 20 AND noDataAlert <> 2 AND noDataAlert <> 3
+    THEN
+        INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+        VALUES ('ReadHumiErrorAlert', NULL, now(), valorHumiNow);
+        RETURN 2;
+    ENDIF;
+
+    RETURN 0;
+END;
+
+
+CREATE PROCEDURE "DBA"."sp_TempAlert"(IN medicao INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+    DECLARE numAmostras INTEGER DEFAULT 60;
+    DECLARE idMedicaoInicial INTEGER;
+	DECLARE somaQuadX DECIMAL(8,2);
+    DECLARE somaX DECIMAL(8,2);
+    DECLARE somaTempY DECIMAL(8,2);
+    DECLARE somaTempXY DECIMAL(8,2);
+    DECLARE decliveTemp DECIMAL(8,2);
+    DECLARE numNulls INTEGER;
+
+    DECLARE valorTemp DECIMAL(8,2);
+    DECLARE thresholdTemp DECIMAL(8,2) DEFAULT 3;
+    
+    //Procura valores limites das culturas para deteção de alertas de proximidade dos limites
+    SELECT valorMedicaoTemperatura INTO valorTemp FROM HumidadeTemperatura WHERE idMedicao = medicao;
+
+    INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
+    SELECT 'LowTempAlert', now(), idCultura, valorTemp
+    FROM Cultura WHERE limiteInferiorTemperatura > valorTemp - thresholdTemp;
+
+    INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
+    SELECT 'HighTempAlert', now(), idCultura, valorTemp
+    FROM Cultura WHERE limiteSuperiorTemperatura < valorTemp + thresholdTemp;
+
+    //Inicia o cálculo do declive dos dados através do método de regressão linear para deteção de
+    //alertas de incremento ou decremento de temperatura ou humidade.
+    SET idMedicaoInicial = medicao - numAmostras;
+    
+    IF (idMedicaoInicial >= 0)
+    THEN
+        SELECT sum(valorMedicaoTemperatura), sum(valorMedicaoTemperatura * (idMedicao - idMedicaoInicial)), 
+            sum(idMedicao - idMedicaoInicial), sum(Power(idMedicao - idMedicaoInicial, 2))
+        INTO somaTempY, somaTempXY, somaX, somaQuadX
+        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial AND valorMedicaoTemperatura IS NOT NULL;
+
+        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE valorMedicaoTemperatura IS NULL;
+ 
+        //Calcula o declive da variação de temperatura e humidade
+        SET decliveTemp = ((numAmostras - numNulls) * somaTempXY - somaTempY * somaX) / 
+                            ((numAmostras - numNulls) * somaQuadX - Power(somaX,2));
+
+        IF decliveTemp > 0.1
+        THEN
+            INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+            VALUES ('IncTempAlert', NULL, now(), valorTemp);
+        ENDIF;
+
+        IF decliveTemp < -0.1
+        THEN
+            INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+            VALUES ('DecTempAlert', NULL, now(), valorTemp);
+        ENDIF;
+    ENDIF;
+END;
+
+
+CREATE PROCEDURE "DBA"."sp_HumiAlert"(IN medicao INTEGER)
+/* RESULT( column_name column_type, ... ) */
+BEGIN
+    DECLARE numAmostras INTEGER DEFAULT 60;
+    DECLARE idMedicaoInicial INTEGER;
+	DECLARE somaQuadX INTEGER;
+    DECLARE somaX INTEGER;
+    DECLARE somaHumiY INTEGER;
+    DECLARE somaHumiXY INTEGER;
+    DECLARE decliveHumi DECIMAL(8,2);
+    DECLARE numNulls INTEGER;
+
+    DECLARE valorHumi DECIMAL(8,2);
+    DECLARE thresholdHumi DECIMAL(8,2) DEFAULT 5;
+    
+    //Procura valores limites das culturas para deteção de alertas de proximidade dos limites
+    SELECT valorMedicaoHumidade INTO valorHumi FROM HumidadeTemperatura WHERE idMedicao = medicao;
+
+    INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
+    SELECT 'LowHumiAlert', now(), idCultura, valorHumi
+    FROM Cultura WHERE limiteInferiorHumidade > valorHumi - thresholdHumi;
+
+    INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
+    SELECT 'HighHumiAlert', now(), idCultura, valorHumi
+    FROM Cultura WHERE limiteSuperiorHumidade < valorHumi + thresholdHumi;
+
+    
+    //Inicia o cálculo do declive dos dados através do método de regressão linear para deteção de
+    //alertas de incremento ou decremento de temperatura ou humidade.
+    SET idMedicaoInicial = medicao - numAmostras;
+    
+    IF (idMedicaoInicial >= 0)
+    THEN 
+        SELECT sum(valorMedicaoHumidade), sum(valorMedicaoHumidade * (idMedicao - idMedicaoInicial)), 
+            sum(idMedicao - idMedicaoInicial), sum(Power(idMedicao - idMedicaoInicial, 2))
+        INTO somaHumiY, somaHumiXY, somaX, somaQuadX
+        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial AND valorMedicaoHumidade IS NOT NULL;
+
+        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE valorMedicaoHumidade IS NULL;
+
+        //Calcula o declive da variação de humidade
+        SET decliveHumi = ((numAmostras - numNulls) * somaHumiXY - somaHumiY * somaX) / 
+                            ((numAmostras - numNulls) * somaQuadX - Power(somaX,2));
+
+        IF decliveHumi > 0.1
+        THEN
+            INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+            VALUES ('IncHumiAlert', NULL, now(), valorHumi);
+        ENDIF;
+
+        IF decliveHumi < -0.1
+        THEN
+            INSERT INTO AlertasHumidadeTemperatura (tipoAlerta, idCultura, dataHora, valorReg)
+            VALUES ('DecHumiAlert', NULL, now(), valorHumi);
+        ENDIF;
+    ENDIF;
+END;

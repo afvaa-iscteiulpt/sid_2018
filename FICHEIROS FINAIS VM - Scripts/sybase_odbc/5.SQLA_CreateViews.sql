@@ -12,6 +12,9 @@ IF EXISTS VariaveisMedidasPorInvestigador;
 IF EXISTS VariaveisPorInvestigador;
 	DROP VIEW
 
+IF EXISTS AlertasPorInvestigador;
+	DROP VIEW
+
 IF EXISTS MedicoesPorInvestigador;
 	CREATE VIEW "DBA"."InvestigadorPorInvestigador" (/* view_column_name, ... */)
 	AS
@@ -69,3 +72,13 @@ IF EXISTS MedicoesPorInvestigador;
 		CulturaPorInvestigador
 	WHERE CulturaPorInvestigador.idCultura = Medicoes.idCultura
 		AND Medicoes.deleted = 0;
+		
+	CREATE VIEW "DBA"."AlertasPorInvestigador"()
+	AS
+	SELECT idAlerta, tipoAlerta, AlertasHumidadeTemperatura.dataHora, AlertasHumidadeTemperatura.idCultura, valorReg 
+	FROM AlertasHumidadeTemperatura, Cultura, Investigador
+	WHERE AlertasHumidadeTemperatura.idCultura IS NULL OR (
+	Cultura.idCultura = AlertasHumidadeTemperatura.idCultura
+	AND Cultura.idInvestigador = Investigador.idInvestigador
+	AND Investigador.email = user_name()
+	AND Cultura.deleted = 0)
