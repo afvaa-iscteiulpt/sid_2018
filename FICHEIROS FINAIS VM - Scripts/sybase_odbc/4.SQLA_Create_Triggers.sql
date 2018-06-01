@@ -432,6 +432,31 @@ begin
 END;
 
 
+CREATE TRIGGER "tr_ins_HumiTemp" AFTER INSERT
+ORDER 1 ON HumidadeTemperatura
+REFERENCING NEW AS new_name
+FOR EACH ROW
+BEGIN
+	DECLARE noDataAlert INTEGER;
+    DECLARE readErrorAlert INTEGER;
+
+    noDataAlert = CALL sp_NoDataAlert("medicao" = new_name.idMedicao);
+
+    IF noDataAlert <> 3
+    THEN
+        readErrorAlert = CALL sp_ReadErrorAlert("medicao" = new_name.idMedicao, "noDataAlert" = noDataAlert);
+
+        IF readErrorAlert <> 1 AND readErrorAlert <> 3
+        THEN CALL sp_HumiAlert("medicao" = new_name.idMedicao)
+        ENDIF;
+
+        IF readErrorAlert <> 2 AND readErrorAlert <> 3
+        THEN CALL sp_TempAlert("medicao" = new_name.idMedicao)
+        ENDIF;
+    ENDIF;
+END;
+
+
 CREATE TRIGGER "tr_beforeInsAlertas" BEFORE INSERT
 ORDER 1 ON AlertasHumidadeTemperatura
 REFERENCING NEW AS new_name

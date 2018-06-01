@@ -447,8 +447,8 @@ CREATE INDEX INVESTIGADORCULTURA_FK ON Cultura (idInvestigador ASC);
 /*==============================================================*/
 CREATE TABLE HumidadeTemperatura (
 	dataHoraMedicao TIMESTAMP NOT NULL,
-	valorMedicaoTemperatura DECIMAL(8, 2) NOT NULL,
-	valorMedicaoHumidade DECIMAL(8, 2) NOT NULL,
+	valorMedicaoTemperatura DECIMAL(8, 2),
+	valorMedicaoHumidade DECIMAL(8, 2),
 	idMedicao INT NOT NULL DEFAULT autoincrement
 	);
 
@@ -734,11 +734,13 @@ CREATE TABLE AlertasHumidadeTemperatura (
 	dataHora TIMESTAMP NOT NULL,
 	valorReg DECIMAL(8,2)
 	);
+	
+ALTER TABLE AlertasHumidadeTemperatura ADD CONSTRAINT ALERTAS_PK PRIMARY KEY (idAlerta);
 
 /*==============================================================*/
 /* Index: PK_ALERTAS		                                    */
 /*==============================================================*/
-CREATE UNIQUE INDEX PK_ALERTAS ON AlertasHumidadeTemperatura (idCultura ASC);
+CREATE UNIQUE INDEX PK_ALERTAS ON AlertasHumidadeTemperatura (idAlerta ASC);
 
 /*==============================================================*/
 /* Index: FK_CULTURA_ALERTAS                                    */
@@ -747,3 +749,4 @@ CREATE UNIQUE INDEX PK_ALERTAS ON AlertasHumidadeTemperatura (idCultura ASC);
 ALTER TABLE AlertasHumidadeTemperatura ADD CONSTRAINT FK_CULTURA_ALERTAS FOREIGN KEY ( 
 	idCultura) 
 REFERENCES Cultura ( idCultura ) ON UPDATE CASCADE ON DELETE CASCADE;
+
