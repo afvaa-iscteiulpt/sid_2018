@@ -25,7 +25,7 @@ class getCultura
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
-				  endExecution(null);
+				  $this->endExecution(null);
 			 } else {
 					//run query on databasehandle object to get info
 			 echo json_encode(array());

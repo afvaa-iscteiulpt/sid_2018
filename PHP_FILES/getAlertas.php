@@ -24,10 +24,11 @@ class getAlertas
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
-				  endExecution(null);
+				  $this->endExecution(null);
 			 } else {
+					//$this->dbconnection->query();
 					//run query on databasehandle object to get info
-			 echo json_encode(array());
+					echo json_encode(array());
 			}
 			
 		
