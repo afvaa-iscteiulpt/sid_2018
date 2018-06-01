@@ -15,20 +15,28 @@ class databasehandle
 			
     }
 
-    private function endExecution(Exception $e)
-    {
-        echo $e->getMessage();
-        exit(0);
-    }
-
-    public function fetch_all($query)
-    {
-		
-    }
-
     public function query($query)
     {
-		
+		$array_result = array();
+		$i = 0;
+		$result = sasql_query( $this->connection, $query );
+		  
+		  if( ! $result ) {
+			  echo "sasql_query failed!";
+			  $this->endExecution();
+		  } else {
+			  
+			  
+			  
+			while ($row = sasql_fetch_array($result)) {
+				
+				array_push($array_result, $row);
+			
+			}
+			
+		  }
+		  
+		  return $array_result;
     }
 
 	private function closeConnection()
@@ -37,6 +45,12 @@ class databasehandle
 		sasql_close( $this->connection );
 		
     }
-	
+	public function endExecution()
+    {
+		$this->closeConnection();
+		echo "Something failed!";
+		exit(0);
+        
+    }
 }
 ?>

@@ -14,8 +14,7 @@ class getHumidade_Temperatura
     
     public function __construct()
     {
-        
-			
+      
 		if(isset($_POST['username']) && isset($_POST['password']))
 		{
 		
@@ -25,16 +24,17 @@ class getHumidade_Temperatura
 			 $this->startConnection();
 			 
 			 if( ! $this->dbconnection ) {
-				  $this->endExecution(null);
+				  $this->dbconnection->endExecution();
 			 } else {
-					//run query on databasehandle object to get info
-			 echo json_encode(array());
+				$res = $this->dbconnection->query("SELECT * FROM Cultura");
+					
+					echo json_encode($res);
 			}
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
-
+		
 	}
 		
 	
@@ -45,14 +45,6 @@ class getHumidade_Temperatura
         
     }
 	
-	private function endExecution(Exception $e)
-    {
-       
-		$message = $e->getMessage();
-		echo $message;
-		exit(0);
-        
-    }
 }
 new getHumidade_Temperatura();
 ?>

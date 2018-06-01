@@ -26,6 +26,7 @@ class trylogin
 			 
 			 if( ! $this->dbconnection ) {
 				  echo json_encode(array(array("valid" => 0)));
+				  $this->dbconnection->endExecution();
 			  } else {
 				  echo json_encode(array(array("valid" => 1)));
 			  }
@@ -44,15 +45,6 @@ class trylogin
    
        
         $this->dbconnection = new databasehandle("uid=" . $this->username . ";pwd=" . $this->password);
-       
-    }
-	
-	private function endExecution(Exception $e)
-    {
-       
-		$message = $e->getMessage();
-		echo $message;
-		exit(0);
        
     }
 }

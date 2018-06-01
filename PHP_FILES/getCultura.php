@@ -14,8 +14,20 @@ class getCultura
     
     public function __construct()
     {
-      
+	
+	$this->username = "dba";
+			$this->password = "sql";
 			
+			 $this->startConnection();
+			 
+			  if( ! $this->dbconnection ) {
+				  $this->dbconnection->endExecution();
+			 } else {
+					$res = $this->dbconnection->query("SELECT * FROM Cultura");
+					
+					echo json_encode($res);
+			}
+	
 		if(isset($_POST['username']) && isset($_POST['password']))
 		{
 		
@@ -25,18 +37,17 @@ class getCultura
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
-				  $this->endExecution(null);
+				  $this->dbconnection->endExecution();
 			 } else {
-					//run query on databasehandle object to get info
-			 echo json_encode(array());
+					$res = $this->dbconnection->query("SELECT * FROM Cultura");
+					
+					echo json_encode($res);
 			}
 		
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
-	
-    
 	}
 		
 	
@@ -45,15 +56,7 @@ class getCultura
         $this->dbconnection = new databasehandle("uid=" . $this->username . ";pwd=" . $this->password);
         
     }
-	
-	private function endExecution(Exception $e)
-    {
-       
-         $message = $e->getMessage();
-         echo $message;
-         exit(0);
-        
-    }
+
 }
 new getCultura();
 ?>

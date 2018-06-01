@@ -14,7 +14,21 @@ class getAlertas
     
     public function __construct()
     {
-       
+     
+	 $this->username = "DBA";
+			$this->password = "sql";
+			
+			 $this->startConnection();
+			 
+			  if( ! $this->dbconnection ) {
+				  $this->dbconnection->endExecution();
+			 } else {
+					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura");
+					
+					echo json_encode($res);
+			}
+
+/*	 
 		if(isset($_POST['username']) && isset($_POST['password']))
 		{
 		
@@ -24,18 +38,18 @@ class getAlertas
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
-				  $this->endExecution(null);
+				  $this->dbconnection->endExecution();
 			 } else {
-					//$this->dbconnection->query();
-					//run query on databasehandle object to get info
-					echo json_encode(array());
+					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura");
+					
+					echo json_encode($res);
 			}
 			
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
-	
+	*/
          
 	}
 		
@@ -47,14 +61,6 @@ class getAlertas
         
     }
 	
-	private function endExecution(Exception $e)
-    {
-     
-		$message = $e->getMessage();
-		echo $message;
-		exit(0);
-	
-    }
 }
 new getAlertas();
 ?>
