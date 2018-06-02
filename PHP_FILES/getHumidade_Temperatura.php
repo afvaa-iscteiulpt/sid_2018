@@ -15,6 +15,19 @@ class getHumidade_Temperatura
     public function __construct()
     {
       
+	$this->username = "dba";
+			$this->password = "sql";
+			
+			 $this->startConnection();
+			 
+			  if( ! $this->dbconnection ) {
+				  $this->dbconnection->endExecution();
+			 } else {
+					$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
+					
+					echo json_encode($res);
+			}
+			
 		if(isset($_POST['username']) && isset($_POST['password']))
 		{
 		
@@ -26,7 +39,7 @@ class getHumidade_Temperatura
 			 if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-				$res = $this->dbconnection->query("SELECT * FROM Cultura");
+				$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
 					
 					echo json_encode($res);
 			}
