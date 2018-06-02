@@ -23,7 +23,7 @@ class getHumidade_Temperatura
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
+					$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura ORDER BY idMedicao");
 					
 					echo json_encode($res);
 			}
@@ -39,7 +39,7 @@ class getHumidade_Temperatura
 			 if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-				$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
+				$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura ORDER BY idMedicao");
 					
 					echo json_encode($res);
 			}
