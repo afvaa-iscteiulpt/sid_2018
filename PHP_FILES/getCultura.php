@@ -21,13 +21,9 @@ class getCultura
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			$query = "";
-			if($this->username == "dba") {
-				$query = "SELECT * FROM Cultura";
-			} else {
-				$query = ""; //TODO - query à view
-			}
-		
+			
+			$query = "SELECT * FROM Cultura";
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {

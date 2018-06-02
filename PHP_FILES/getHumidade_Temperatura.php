@@ -25,14 +25,9 @@ class getHumidade_Temperatura
 			if(isset($_POST['datepickerDate'])) 
 				$this->datepickerDate = $_POST['datepickerDate'];
 					
-			$query = "";
-			if($this->username == "dba") {
-				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
-			} else {
-				//TODO - query à view
-				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
-			}
-	
+			
+			$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
