@@ -21,13 +21,9 @@ class getAlertas
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			$query = "";
-			if($this->username == "dba") {
-				$query = "SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC";
-			} else {
-				$query = ""; //TODO - query à view
-			}
-		
+			
+			$query = "SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC";
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
