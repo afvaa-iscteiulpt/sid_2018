@@ -15,42 +15,34 @@ class getAlertas
     public function __construct()
     {
      
-	 $this->username = "DBA";
-			$this->password = "sql";
-			
-			 $this->startConnection();
-			 
-			  if( ! $this->dbconnection ) {
-				  $this->dbconnection->endExecution();
-			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC");
-					
-					echo json_encode($res);
-			}
-
-/*	 
-		if(isset($_POST['username']) && isset($_POST['password']))
+			if(isset($_POST['username']) && isset($_POST['password']))
 		{
-		
+			
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
+			$query = "";
+			if($this->username == "dba") {
+				$query = "SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC";
+			} else {
+				$query = ""; //TODO - query à view
+			}
+		
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura");
+				$res = $this->dbconnection->query($query);
 					
-					echo json_encode($res);
+				echo json_encode($res);
 			}
 			
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
-	*/
-         
+    
 	}
 		
 	
