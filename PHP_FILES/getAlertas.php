@@ -23,7 +23,7 @@ class getAlertas
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura");
+					$res = $this->dbconnection->query("SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC");
 					
 					echo json_encode($res);
 			}
