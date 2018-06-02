@@ -21,15 +21,18 @@ class getHumidade_Temperatura
 			
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
-			$this->datepickerDate = $_POST['datepickerDate'];
-						
+			
+			if(isset($_POST['datepickerDate'])) 
+				$this->datepickerDate = $_POST['datepickerDate'];
+					
 			$query = "";
 			if($this->username == "dba") {
-				$query = "SELECT * FROM HumidadeTemperatura ORDER BY idMedicao WHERE idMedicao " + last2DaysQuery();
+				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
 			} else {
-				$query = ""; //TODO - query à view
+				//TODO - query à view
+				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
 			}
-		
+	
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
@@ -54,17 +57,15 @@ class getHumidade_Temperatura
         
     }
 	
-	$this->datepickerDate
-	
 	private function last2DaysQuery() {
 			
-		$firstDate;
-		$secndDate;
-		if(!$this->datepickerDate.empty() && $this->datepickerDate != null) {
+		$firstDate = "";
+		$secndDate = "";
+		if(!$this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
 			
 			$time = strtotime($this->datepickerDate);
 			$secndDate = date('Y-m-d 23:59:59',$time);
-			$firstDate          = strtotime('-1 day', $time);	
+			$firstDate = strtotime('-1 day', $time);	
 		
 		} else {
 			$todayBegin              = strtotime('00:00:00');
@@ -72,7 +73,7 @@ class getHumidade_Temperatura
 			$firstDate          = strtotime('-1 day', $todayBegin);	
 		}
 			
-		return "BETWEEN '" . date("Y-m-d H:i:s\n", $firstDate) . "' AND '" . date("Y-m-d H:i:s\n", $secndDate)
+		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . date("Y-m-d H:i:s", $secndDate);
 	}
 	
 }
