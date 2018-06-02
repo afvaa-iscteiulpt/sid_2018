@@ -21,22 +21,21 @@ class getAlertas
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			if(isset($_POST['datepickerDate'])) 
-				$this->datepickerDate = $_POST['datepickerDate'];
-			
-			$query = "";
+			$queryInput = "";
 			if($this->username == "dba") {
-				$query = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . " ORDER BY idAlerta DESC";
+				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			} else {
-				$query = "SELECT * FROM AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . " ORDER BY idAlerta DESC";
+				//TODO - add view query
+				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			}
-		
+			
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-				$res = $this->dbconnection->query($query);
+				$res = $this->dbconnection->query($queryInput);
 					
 				echo json_encode($res);
 			}
@@ -58,21 +57,11 @@ class getAlertas
 	
 	private function last2DaysQuery() {
 			
-		$firstDate = "";
-		$secndDate = "";
-		if(!$this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
-			
-			$time = strtotime($this->datepickerDate);
-			$secndDate = date('Y-m-d 23:59:59',$time);
-			$firstDate = strtotime('-1 day', $time);	
-		
-		} else {
-			$todayBegin              = strtotime('00:00:00');
-			$secndDate              = strtotime('23:59:59');
-			$firstDate          = strtotime('-1 day', $todayBegin);	
-		}
-			
-		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . date("Y-m-d H:i:s", $secndDate) . "'";
+		$todayBegin              = strtotime('00:00:00');
+		$secndDate              = strtotime('23:59:59');
+		$firstDate          = strtotime('-1 day', $todayBegin);	
+	
+		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . $secndDate;
 	}
 	
 }

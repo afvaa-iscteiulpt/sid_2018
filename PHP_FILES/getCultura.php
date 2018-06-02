@@ -21,19 +21,20 @@ class getCultura
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			$query = "";
+			$queryInput = "";
 			if($this->username == "dba") {
-				$query = "SELECT * FROM Cultura";
+				$queryInput = "SELECT * FROM Cultura";
 			} else {
-				$query = "SELECT * FROM CulturaPorInvestigador";
+				//TODO - add view query
+				$queryInput = "SELECT * FROM Cultura";
 			}
-		
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-				$res = $this->dbconnection->query($query);
+				$res = $this->dbconnection->query($queryInput);
 					
 				echo json_encode($res);
 			}
