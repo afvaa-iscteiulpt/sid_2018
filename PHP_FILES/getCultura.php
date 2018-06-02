@@ -25,7 +25,7 @@ class getCultura
 			if($this->username == "dba") {
 				$query = "SELECT * FROM Cultura";
 			} else {
-				$query = ""; //TODO - query à view
+				$query = "SELECT * FROM CulturaPorInvestigador";
 			}
 		
 			 $this->startConnection();

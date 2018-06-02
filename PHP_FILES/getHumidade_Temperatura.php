@@ -27,10 +27,10 @@ class getHumidade_Temperatura
 					
 			$query = "";
 			if($this->username == "dba") {
-				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . " ORDER BY dataHoraMedicao" ;
 			} else {
 				//TODO - query à view
-				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+				$query = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . " ORDER BY dataHoraMedicao" ;
 			}
 	
 			 $this->startConnection();
@@ -73,7 +73,7 @@ class getHumidade_Temperatura
 			$firstDate          = strtotime('-1 day', $todayBegin);	
 		}
 			
-		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . date("Y-m-d H:i:s", $secndDate);
+		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . date("Y-m-d H:i:s", $secndDate) . "'";
 	}
 	
 }

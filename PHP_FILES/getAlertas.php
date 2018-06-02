@@ -21,11 +21,14 @@ class getAlertas
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
+			if(isset($_POST['datepickerDate'])) 
+				$this->datepickerDate = $_POST['datepickerDate'];
+			
 			$query = "";
 			if($this->username == "dba") {
-				$query = "SELECT * FROM AlertasHumidadeTemperatura ORDER BY idAlerta DESC";
+				$query = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . " ORDER BY idAlerta DESC";
 			} else {
-				$query = ""; //TODO - query à view
+				$query = "SELECT * FROM AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . " ORDER BY idAlerta DESC";
 			}
 		
 			 $this->startConnection();
@@ -52,6 +55,25 @@ class getAlertas
         $this->dbconnection = new databasehandle("uid=" . $this->username . ";pwd=" . $this->password);
         
     }
+	
+	private function last2DaysQuery() {
+			
+		$firstDate = "";
+		$secndDate = "";
+		if(!$this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
+			
+			$time = strtotime($this->datepickerDate);
+			$secndDate = date('Y-m-d 23:59:59',$time);
+			$firstDate = strtotime('-1 day', $time);	
+		
+		} else {
+			$todayBegin              = strtotime('00:00:00');
+			$secndDate              = strtotime('23:59:59');
+			$firstDate          = strtotime('-1 day', $todayBegin);	
+		}
+			
+		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . date("Y-m-d H:i:s", $secndDate) . "'";
+	}
 	
 }
 new getAlertas();
