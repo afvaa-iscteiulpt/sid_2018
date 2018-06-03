@@ -1,5 +1,4 @@
 --------- AVISO ---------
-- foi adicionada uma pasta chamada: finais_etapafinal
 - esta pasta contem:
 * android -> apk (a funcionar no meu telemovel e do tiago) + zip (codigo android studio)
 * java -> processos jar j1 e j2 + zip (codigo do eclipse) + bat file para abrir automaticamente o j1.jar e j2.jar
