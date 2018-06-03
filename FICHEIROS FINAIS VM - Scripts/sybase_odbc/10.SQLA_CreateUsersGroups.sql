@@ -51,6 +51,7 @@ grant select, insert, delete, update on DBA.Medicoes to "Administradores";
 grant select, insert, delete, update on DBA.Variaveis to "Administradores";
 grant select, insert, delete, update on DBA.VariaveisMedidas to "Administradores";
 grant select, insert, delete, update on DBA.Cultura to "Administradores";
+grant select on DBA.AlertasHumidadeTemperatura to "Administradores";
 grant select on DBA.Investigador to "Administradores";
 
 /*
@@ -61,6 +62,7 @@ grant select, insert, delete, update on DBA.Medicoes to "SuperAdministrador";
 grant select, insert, delete, update on DBA.Variaveis to "SuperAdministrador";
 grant select, insert, delete, update on DBA.VariaveisMedidas to "SuperAdministrador";
 grant select, insert, delete, update on DBA.Cultura to "SuperAdministrador";
+grant select on DBA.AlertasHumidadeTemperatura to "SuperAdministrador";
 grant select on DBA.Investigador to "SuperAdministrador";
 
 /*
