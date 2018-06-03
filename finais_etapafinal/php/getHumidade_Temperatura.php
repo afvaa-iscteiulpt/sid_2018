@@ -69,7 +69,7 @@ class getHumidade_Temperatura
 			$firstDate          = date("Y-m-d H:i:s", strtotime('00:00:00'));
 		}
 		
-		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . $secndDate;
+		return "BETWEEN '" . $firstDate . "' AND '" . $secndDate;
 	}
 	
 }
