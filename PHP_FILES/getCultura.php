@@ -12,44 +12,38 @@ class getCultura
 	private $username;
 	private $password;
     
-    public function __construct()
+	 public function __construct()
     {
-	
-	$this->username = "dba";
-			$this->password = "sql";
-			
-			 $this->startConnection();
-			 
-			  if( ! $this->dbconnection ) {
-				  $this->dbconnection->endExecution();
-			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM Cultura");
-					
-					echo json_encode($res);
-			}
-	
-		if(isset($_POST['username']) && isset($_POST['password']))
-		{
 		
+			if(isset($_POST['username']) && isset($_POST['password']))
+		{
+			
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
+			$queryInput = "";
+			if($this->username == "dba") {
+				$queryInput = "SELECT * FROM Cultura";
+			} else {
+				$queryInput = "SELECT * FROM DBA.CulturaPorInvestigador";
+			}
+			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM Cultura");
+				$res = $this->dbconnection->query($queryInput);
 					
-					echo json_encode($res);
+				echo json_encode($res);
 			}
-		
+			
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
+    
 	}
-		
 	
 	private function startConnection() {
    

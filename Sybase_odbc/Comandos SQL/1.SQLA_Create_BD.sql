@@ -307,7 +307,7 @@ idInvestigador ASC
 /*==============================================================*/
 create table HumidadeTemperatura 
 (
-   dataHoraMedicao      timestamp                      not null,
+   dataHoraMedicao      datetime                      not null,
    valorMedicaoTemperatura decimal(8,2)                   not null,
    valorMedicaoHumidade decimal(8,2)                   not null,
    idMedicao            integer                        not null default autoincrement

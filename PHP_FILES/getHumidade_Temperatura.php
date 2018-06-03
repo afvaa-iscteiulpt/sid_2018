@@ -11,45 +11,41 @@ class getHumidade_Temperatura
     public $dbconnection = null;
 	private $username;
 	private $password;
-    
-    public function __construct()
+    private $datepickerDate;
+	
+	 public function __construct()
     {
-      
-	$this->username = "dba";
-			$this->password = "sql";
+		
+			if(isset($_POST['username']) && isset($_POST['password']))
+		{
+			
+			$this->username = $_POST['username'];
+			$this->password = $_POST['password'];
+			
+			if(isset($_POST['datepickerDate'])) 
+				$this->datepickerDate = $_POST['datepickerDate'];
+					
+				
+			
+			$queryInput = "SELECT * FROM DBA.HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+			//echo $queryInput;
 			
 			 $this->startConnection();
 			 
 			  if( ! $this->dbconnection ) {
 				  $this->dbconnection->endExecution();
 			 } else {
-					$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
+				$res = $this->dbconnection->query($queryInput);
 					
-					echo json_encode($res);
+				echo json_encode($res);
 			}
 			
-		if(isset($_POST['username']) && isset($_POST['password']))
-		{
-		
-			$this->username = $_POST['username'];
-			$this->password = $_POST['password'];
-			
-			 $this->startConnection();
-			 
-			 if( ! $this->dbconnection ) {
-				  $this->dbconnection->endExecution();
-			 } else {
-				$res = $this->dbconnection->query("SELECT * FROM HumidadeTemperatura");
-					
-					echo json_encode($res);
-			}
 		
 		} else {
 			echo "not a post, or missing parameters";
 		}
-		
+    
 	}
-		
 	
 	private function startConnection() {
    
@@ -57,6 +53,25 @@ class getHumidade_Temperatura
         $this->dbconnection = new databasehandle("uid=" . $this->username . ";pwd=" . $this->password);
         
     }
+	
+	private function last2DaysQuery() {
+			
+		$firstDate = "";
+		$secndDate = "";
+		if($this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
+			
+			$time = strtotime($this->datepickerDate);
+			$secndDate = $this->datepickerDate . ' 23:59:59';
+			$firstDate = strtotime('-1 day', $time);	
+		
+		} else {
+			$todayBegin              = strtotime('00:00:00');
+			$secndDate              = date("Y-m-d H:i:s", strtotime('23:59:59'));
+			$firstDate          = strtotime('-1 day', $todayBegin);	
+		}
+		
+		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . $secndDate;
+	}
 	
 }
 new getHumidade_Temperatura();
