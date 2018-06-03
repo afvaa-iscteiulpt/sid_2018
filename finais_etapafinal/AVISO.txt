@@ -1,0 +1,15 @@
+--------- AVISO ---------
+- foi adicionada uma pasta chamada: finais_etapafinal
+- esta pasta contem:
+* android -> apk (a funcionar no meu telemovel e do tiago) + zip (codigo android studio)
+* java -> processos jar j1 e j2 + zip (codigo do eclipse) + bat file para abrir automaticamente o j1.jar e j2.jar
+* php -> ficheiros php todos completos
+* sensor -> ficheiro javascript para correr no paho para gerar automaticamente dados como um sensor
+* sybase -> ficheiro .db a funcionar. qualquer edição na base de dados, deve ser feita neste ficheiro e substituido, 
+em vez de nos ficheiros de scripts, para que nao seja preciso importar scripts, a grantir que todos temos a bd igual
+--------- AVISO ---------
+
+para correrem o script para simular um sensor:
+1)instalar extensão no chrome: https://chrome.google.com/webstore/detail/custom-javascript-for-web/poakhlngfciodnhlhhgnaaelnpjljija
+2)copiar o código java script e colar na extensão e clicar em save.
+3)sempre que abrirem o site ele irá gerar dados como um sensor de 5 em 5 segundos.
