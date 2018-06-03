@@ -16,6 +16,13 @@ setInterval(function(){
    
 },5000);
 
+setInterval(function(){ 
+
+	console.log("Reloading page...");
+	location.reload();
+   
+},300000);
+
 function addZero(i) {
     if (i < 10) {
         i = "0" + i;
