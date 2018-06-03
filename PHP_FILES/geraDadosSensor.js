@@ -5,8 +5,8 @@ setInterval(function(){
 
 	var hour = getHourString();
 	var date = getDateString();
-	var humidity = getRandomHumidity(19,21); 
-	var temperature = getRandomTemperature(68,72); 
+	var humidity = getRandomValue(68,72); 
+	var temperature = getRandomValue(19,21);
    
    $("#publishMessageInput").text('{"temperature":"' + temperature + '", "humidity": "' + humidity + '", "date": "' + date + '", "time": "' + hour + '"}');
    
@@ -43,16 +43,17 @@ function getDateString() {
 	return d + "/" + m + "/" + a;
 }
 
-function getRandomHumidity(min, max) {
+function getRandomValue(min, max) {
 	
-	var randomNumber = Math.floor(Math.random()*(max-min+1)+min)
+	var randomNumber = Math.floor((Math.random()*(max-min+1)+min)*100)/100;
 
-	return randomNumber;
-}
+	if (Math.random() < 0.03) {
+		randomNumber = randomNumber + 50;
+	}
 
-function getRandomTemperature(min, max) {
-	
-	var randomNumber = Math.floor(Math.random()*(max-min+1)+min)
+	if (Math.random() < 0.03) {
+		randomNumber = null;
+	}
 
 	return randomNumber;
 }
