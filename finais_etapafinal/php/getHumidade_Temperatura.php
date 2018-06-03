@@ -60,14 +60,13 @@ class getHumidade_Temperatura
 		$secndDate = "";
 		if($this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
 			
-			$time = strtotime($this->datepickerDate);
 			$secndDate = $this->datepickerDate . ' 23:59:59';
-			$firstDate = strtotime('-1 day', $time);	
+			$firstDate = $this->datepickerDate . ' 00:00:00';
 		
 		} else {
-			$todayBegin              = strtotime('00:00:00');
+			
 			$secndDate              = date("Y-m-d H:i:s", strtotime('23:59:59'));
-			$firstDate          = strtotime('-1 day', $todayBegin);	
+			$firstDate          = date("Y-m-d H:i:s", strtotime('00:00:00'));
 		}
 		
 		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . $secndDate;
