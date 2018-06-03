@@ -54,7 +54,7 @@ function getRandomValue(min, max) {
 	
 	var randomNumber = Math.floor((Math.random()*(max-min+1)+min)*100)/100;
 
-	if (Math.random() < 0.03) {
+	if (Math.random() < 0.005) {
 		randomNumber = randomNumber + 50;
 	}
 
