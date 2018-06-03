@@ -25,7 +25,10 @@ class getHumidade_Temperatura
 			if(isset($_POST['datepickerDate'])) 
 				$this->datepickerDate = $_POST['datepickerDate'];
 					
+				
+			
 			$queryInput = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+			//echo $queryInput;
 			
 			 $this->startConnection();
 			 
@@ -57,15 +60,13 @@ class getHumidade_Temperatura
 		$secndDate = "";
 		if($this->datepickerDate != "" && $this->datepickerDate != null && isset($this->datepickerDate)) {
 			
-			echo $this->datepickerDate;
-			
 			$time = strtotime($this->datepickerDate);
 			$secndDate = $this->datepickerDate . ' 23:59:59';
 			$firstDate = strtotime('-1 day', $time);	
 		
 		} else {
 			$todayBegin              = strtotime('00:00:00');
-			$secndDate              = strtotime('23:59:59');
+			$secndDate              = date("Y-m-d H:i:s", strtotime('23:59:59'));
 			$firstDate          = strtotime('-1 day', $todayBegin);	
 		}
 		

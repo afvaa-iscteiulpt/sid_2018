@@ -29,6 +29,7 @@ class getAlertas
 				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			}
 			
+			//echo $queryInput;
 			
 			 $this->startConnection();
 			 
@@ -58,7 +59,7 @@ class getAlertas
 	private function last2DaysQuery() {
 			
 		$todayBegin              = strtotime('00:00:00');
-		$secndDate              = strtotime('23:59:59');
+		$secndDate              = date("Y-m-d H:i:s", strtotime('23:59:59'));
 		$firstDate          = strtotime('-1 day', $todayBegin);	
 	
 		return "BETWEEN '" . date("Y-m-d H:i:s", $firstDate) . "' AND '" . $secndDate;
