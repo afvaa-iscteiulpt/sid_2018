@@ -28,7 +28,7 @@ class getAlertas
 				$queryInput = "SELECT * FROM DBA.AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			}
 			
-			//echo $queryInput;
+			echo $queryInput;
 			
 			 $this->startConnection();
 			 
