@@ -91,7 +91,7 @@ CREATE PROCEDURE sp_dropAdministrador (username VARCHAR(50) DEFAULT '')
 BEGIN 
   DECLARE dropUser VARCHAR(200);
   IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = username) THEN
-    SET dropUser = 'DROP USER "' + useremail + '"';
+    SET dropUser = 'DROP USER "' + username + '"';
     EXECUTE(dropUser); 
   END IF;
 END;
