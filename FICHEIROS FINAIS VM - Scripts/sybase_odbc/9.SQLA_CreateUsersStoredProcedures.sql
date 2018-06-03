@@ -71,13 +71,13 @@ BEGIN
   DECLARE createUser VARCHAR(200);
   DECLARE grantMembership VARCHAR(200);
   IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = username) THEN
-  	SET dropUser = 'DROP USER "' + useremail + '"';
+  	SET dropUser = 'DROP USER "' + username + '"';
     EXECUTE(dropUser); 
   END IF;
-  SET createUser = 'CREATE USER "' + useremail + '" IDENTIFIED BY "' + pass +'"';
+  SET createUser = 'CREATE USER "' + username + '" IDENTIFIED BY "' + pass +'"';
   EXECUTE(createUser);  
   IF EXISTS (SELECT * FROM dbo.sysusers where dbo.sysusers.name = 'Administradores' ) THEN
-    SET grantMembership = 'GRANT MEMBERSHIP IN GROUP Investigadores TO "' + useremail + '"';
+    SET grantMembership = 'GRANT MEMBERSHIP IN GROUP Investigadores TO "' + username + '"';
     EXECUTE(grantMembership);
   END IF;
 END;
