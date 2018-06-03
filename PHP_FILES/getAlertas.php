@@ -25,8 +25,7 @@ class getAlertas
 			if($this->username == "dba") {
 				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			} else {
-				//TODO - add view query
-				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
+				$queryInput = "SELECT * FROM DBA.AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
 			}
 			
 			//echo $queryInput;

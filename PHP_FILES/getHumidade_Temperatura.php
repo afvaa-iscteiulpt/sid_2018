@@ -27,7 +27,7 @@ class getHumidade_Temperatura
 					
 				
 			
-			$queryInput = "SELECT * FROM HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+			$queryInput = "SELECT * FROM DBA.HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
 			//echo $queryInput;
 			
 			 $this->startConnection();
