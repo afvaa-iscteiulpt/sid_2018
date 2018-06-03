@@ -11,6 +11,7 @@ class getCultura
     public $dbconnection = null;
 	private $username;
 	private $password;
+	private $idCultura;
     
 	 public function __construct()
     {
@@ -21,11 +22,23 @@ class getCultura
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			$queryInput = "";
-			if($this->username == "dba") {
-				$queryInput = "SELECT * FROM Cultura";
+			if(isset($_POST['idCultura'])) {
+				$this->idCultura = $_POST['idCultura'];
+			
+				$queryInput = "";
+				if($this->username == "dba") {
+					$queryInput = "SELECT * FROM Cultura WHERE idCultura > " . $this->idCultura;
+				} else {
+					$queryInput = "SELECT * FROM DBA.CulturaPorInvestigador WHERE idCultura > " . $this->idCultura;
+				}
+
 			} else {
-				$queryInput = "SELECT * FROM DBA.CulturaPorInvestigador";
+				$queryInput = "";
+				if($this->username == "dba") {
+					$queryInput = "SELECT * FROM Cultura";
+				} else {
+					$queryInput = "SELECT * FROM DBA.CulturaPorInvestigador";
+				}
 			}
 			
 			 $this->startConnection();

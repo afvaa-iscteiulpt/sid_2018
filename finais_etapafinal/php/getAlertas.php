@@ -11,6 +11,7 @@ class getAlertas
     public $dbconnection = null;
 	private $username;
 	private $password;
+	private $idAlerta;
     
     public function __construct()
     {
@@ -21,11 +22,23 @@ class getAlertas
 			$this->username = $_POST['username'];
 			$this->password = $_POST['password'];
 			
-			$queryInput = "";
-			if($this->username == "dba") {
-				$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
+			if(isset($_POST['idAlerta'])) {
+				$this->idAlerta = $_POST['idAlerta'];
+				
+				$queryInput = "";
+				if($this->username == "dba") {
+					$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE idAlerta > " . $this->idAlerta . " ORDER BY idAlerta" ;
+				} else {
+					$queryInput = "SELECT * FROM DBA.AlertasPorInvestigador WHERE idAlerta > " . $this->idAlerta . " ORDER BY idAlerta" ;
+				}
+				
 			} else {
-				$queryInput = "SELECT * FROM DBA.AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta DESC" ;
+				$queryInput = "";
+				if($this->username == "dba") {
+					$queryInput = "SELECT * FROM AlertasHumidadeTemperatura WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta" ;
+				} else {
+					$queryInput = "SELECT * FROM DBA.AlertasPorInvestigador WHERE dataHora " . $this->last2DaysQuery() . "' ORDER BY idAlerta" ;
+				}
 			}
 			
 			//echo $queryInput;

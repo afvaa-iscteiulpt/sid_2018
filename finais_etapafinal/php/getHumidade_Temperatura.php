@@ -12,6 +12,7 @@ class getHumidade_Temperatura
 	private $username;
 	private $password;
     private $datepickerDate;
+	private $idMedicao;
 	
 	 public function __construct()
     {
@@ -24,11 +25,13 @@ class getHumidade_Temperatura
 			
 			if(isset($_POST['datepickerDate'])) 
 				$this->datepickerDate = $_POST['datepickerDate'];
-					
-				
 			
-			$queryInput = "SELECT * FROM DBA.HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
-			//echo $queryInput;
+			if(isset($_POST['idMedicao'])) {
+				$this->idMedicao = $_POST['idMedicao'];
+				$queryInput = "SELECT * FROM DBA.HumidadeTemperatura WHERE idMedicao > " . $this->idMedicao . " ORDER BY dataHoraMedicao" ;
+			} else {
+				$queryInput = "SELECT * FROM DBA.HumidadeTemperatura WHERE dataHoraMedicao " . $this->last2DaysQuery() . "' ORDER BY dataHoraMedicao" ;
+			}
 			
 			 $this->startConnection();
 			 
