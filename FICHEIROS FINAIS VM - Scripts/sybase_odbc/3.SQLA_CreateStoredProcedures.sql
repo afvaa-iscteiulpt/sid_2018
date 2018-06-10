@@ -259,7 +259,7 @@ BEGIN
     DECLARE valorTemp DECIMAL(8,2);
     DECLARE thresholdTemp DECIMAL(8,2) DEFAULT 3;
     
-    //Procura valores limites das culturas para deteção de alertas de proximidade dos limites
+    //Procura valores limites das culturas para dete§o de alertas de proximidade dos limites
     SELECT valorMedicaoTemperatura INTO valorTemp FROM HumidadeTemperatura WHERE idMedicao = medicao;
 
     INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
@@ -270,7 +270,7 @@ BEGIN
     SELECT 'HighTempAlert', now(), idCultura, valorTemp
     FROM Cultura WHERE limiteSuperiorTemperatura < valorTemp + thresholdTemp;
 
-    //Inicia o cálculo do declive dos dados através do método de regressão linear para deteção de
+    //Inicia o clculo do declive dos dados atrav©s do m©todo de regresso linear para dete§o de
     //alertas de incremento ou decremento de temperatura ou humidade.
     SET idMedicaoInicial = medicao - numAmostras;
     
@@ -279,13 +279,18 @@ BEGIN
         SELECT sum(valorMedicaoTemperatura), sum(valorMedicaoTemperatura * (idMedicao - idMedicaoInicial)), 
             sum(idMedicao - idMedicaoInicial), sum(Power(idMedicao - idMedicaoInicial, 2))
         INTO somaTempY, somaTempXY, somaX, somaQuadX
-        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial AND valorMedicaoTemperatura IS NOT NULL;
+        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial 
+        AND idMedicao <= medicao
+        AND valorMedicaoTemperatura IS NOT NULL;
 
-        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE valorMedicaoTemperatura IS NULL;
+        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial 
+        AND idMedicao <= medicao
+        AND valorMedicaoTemperatura IS NOT NULL;
+    
  
-        //Calcula o declive da variação de temperatura e humidade
-        SET decliveTemp = ((numAmostras - numNulls) * somaTempXY - somaTempY * somaX) / 
-                            ((numAmostras - numNulls) * somaQuadX - Power(somaX,2));
+        //Calcula o declive da varia§o de temperatura e humidade
+        SET decliveTemp = (numNulls * somaTempXY - somaTempY * somaX) / 
+                            (numNulls * somaQuadX - Power(somaX,2));
 
         IF decliveTemp > 0.1
         THEN
@@ -317,19 +322,14 @@ BEGIN
     DECLARE valorHumi DECIMAL(8,2);
     DECLARE thresholdHumi DECIMAL(8,2) DEFAULT 5;
     
-    //Procura valores limites das culturas para deteção de alertas de proximidade dos limites
+    //Procura valores limites das culturas para dete§o de alertas de proximidade dos limites
     SELECT valorMedicaoHumidade INTO valorHumi FROM HumidadeTemperatura WHERE idMedicao = medicao;
 
     INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
     SELECT 'LowHumiAlert', now(), idCultura, valorHumi
     FROM Cultura WHERE limiteInferiorHumidade > valorHumi - thresholdHumi;
-
-    INSERT INTO AlertasHumidadeTemperatura(tipoAlerta, dataHora, idCultura, valorReg)
-    SELECT 'HighHumiAlert', now(), idCultura, valorHumi
-    FROM Cultura WHERE limiteSuperiorHumidade < valorHumi + thresholdHumi;
-
     
-    //Inicia o cálculo do declive dos dados através do método de regressão linear para deteção de
+    //Inicia o clculo do declive dos dados atrav©s do m©todo de regresso linear para dete§o de
     //alertas de incremento ou decremento de temperatura ou humidade.
     SET idMedicaoInicial = medicao - numAmostras;
     
@@ -338,13 +338,17 @@ BEGIN
         SELECT sum(valorMedicaoHumidade), sum(valorMedicaoHumidade * (idMedicao - idMedicaoInicial)), 
             sum(idMedicao - idMedicaoInicial), sum(Power(idMedicao - idMedicaoInicial, 2))
         INTO somaHumiY, somaHumiXY, somaX, somaQuadX
-        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial AND valorMedicaoHumidade IS NOT NULL;
+        FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial 
+        AND idMedicao <= medicao
+        AND valorMedicaoHumidade IS NOT NULL;
 
-        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE valorMedicaoHumidade IS NULL;
+        SELECT count(idMedicao) INTO numNulls FROM HumidadeTemperatura WHERE idMedicao > idMedicaoInicial 
+        AND idMedicao <= medicao
+        AND valorMedicaoHumidade IS NOT NULL;
 
-        //Calcula o declive da variação de humidade
-        SET decliveHumi = ((numAmostras - numNulls) * somaHumiXY - somaHumiY * somaX) / 
-                            ((numAmostras - numNulls) * somaQuadX - Power(somaX,2));
+        //Calcula o declive da varia§o de humidade
+        SET decliveHumi = (numNulls * somaHumiXY - somaHumiY * somaX) / 
+                            (numNulls * somaQuadX - Power(somaX,2));
 
         IF decliveHumi > 0.1
         THEN
