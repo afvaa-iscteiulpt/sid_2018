@@ -5,12 +5,10 @@ setInterval(function(){
 
 	var hour = getHourString();
 	var date = getDateString();
-	var humidity = getRandomValue(68,72); 
-	var temperature = getRandomValue(19,21);
+	var humidity = getRandomValue(69.5,70.5); 
+	var temperature = getRandomValue(19.5,20.5);
    
    $("#publishMessageInput").text('{"temperature":"' + temperature + '", "humidity": "' + humidity + '", "date": "' + date + '", "time": "' + hour + '"}');
-   
-   console.log($("#publishMessageInput").val());
    
    $("#publishButton").click();
    
@@ -20,6 +18,7 @@ setInterval(function(){
 
 	console.log("Reloading page...");
 	location.reload();
+	console.log("Page reloaded");
    
 },300000);
 
@@ -52,7 +51,7 @@ function getDateString() {
 
 function getRandomValue(min, max) {
 	
-	var randomNumber = Math.floor((Math.random()*(max-min+1)+min)*100)/100;
+	var randomNumber = Math.floor((Math.random()*(max-min)+min)*100)/100;
 
 	if (Math.random() < 0.005) {
 		randomNumber = randomNumber + 50;
