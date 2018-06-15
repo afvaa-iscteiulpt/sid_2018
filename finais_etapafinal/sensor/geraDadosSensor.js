@@ -17,6 +17,7 @@ setInterval(function(){
 setInterval(function(){ 
 
 	console.log("Reloading page...");
+	$("#clientConnectButton").click();
 	location.reload();
 	console.log("Page reloaded");
    
