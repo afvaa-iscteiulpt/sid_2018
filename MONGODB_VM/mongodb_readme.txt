@@ -33,3 +33,5 @@ os três jars (libraries) ja estao adicionados a ambos os projetos (test e final)
 - org.eclipse.paho.client.mqttv3-1.1.0.jar
 - sajdbc4.jar
 -----
+
+como lançar comandos de mongo na linha de comandos	https://docs.mongodb.com/manual/mongo/
